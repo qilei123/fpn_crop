@@ -267,6 +267,7 @@ class Module(BaseModule):
                     cache_arr = cache[name]
 
                     # just in case the cached array is just the target itself
+                    print(name)
                     if cache_arr is not arr:
                         cache_arr.copyto(arr)
                 else:
