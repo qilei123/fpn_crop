@@ -48,6 +48,7 @@ def get_image(roidb, config):
         if DEBUG:
             print "im_info:"+str(im_info)
             print "new_rec['boxes'] with scaled:"+str(new_rec['boxes'])
+            print "new_rec['gt_overlaps']:"+str(new_rec['gt_overlaps'])
         new_rec['im_info'] = im_info
         processed_roidb.append(new_rec)
     return processed_ims, processed_roidb
