@@ -11,6 +11,7 @@ import cv2
 import random
 from PIL import Image
 from bbox.bbox_transform import clip_boxes
+from math import floor
 
 DEBUG = True
 
