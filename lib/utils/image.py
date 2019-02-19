@@ -36,7 +36,7 @@ def get_image(roidb, config):
             im = im[:, ::-1, :]
         new_rec = roi_rec.copy()
         if DEBUG:
-            print 'new_rec['boxes']:'+str(new_rec['boxes'])
+            print "new_rec['boxes']:"+str(new_rec['boxes'])
         scale_ind = random.randrange(len(config.SCALES))
         target_size = config.SCALES[scale_ind][0]
         max_size = config.SCALES[scale_ind][1]
@@ -46,7 +46,7 @@ def get_image(roidb, config):
         im_info = [im_tensor.shape[2], im_tensor.shape[3], im_scale]
         new_rec['boxes'] = clip_boxes(np.round(roi_rec['boxes'].copy() * im_scale), im_info[:2])
         if DEBUG:
-            print print 'new_rec['boxes'] with scaled:'+str(new_rec['boxes'])
+            print "new_rec['boxes'] with scaled:"+str(new_rec['boxes'])
         new_rec['im_info'] = im_info
         processed_roidb.append(new_rec)
     return processed_ims, processed_roidb
