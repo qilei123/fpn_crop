@@ -932,6 +932,10 @@ class resnet_v1_101_fpn_rcnn(Symbol):
         return group
 
     def init_weight_rcnn(self, cfg, arg_params, aux_params):
+
+        arg_params['conv11_weight'] = mx.random.normal(0, 0.01, shape=self.arg_shape_dict['conv11_weight'])
+        arg_params['conv11_bias'] = mx.nd.zeros(shape=self.arg_shape_dict['conv11_bias'])
+
         arg_params['fc_new_1_weight'] = mx.random.normal(0, 0.01, shape=self.arg_shape_dict['fc_new_1_weight'])
         arg_params['fc_new_1_bias'] = mx.nd.zeros(shape=self.arg_shape_dict['fc_new_1_bias'])
         arg_params['fc_new_2_weight'] = mx.random.normal(0, 0.01, shape=self.arg_shape_dict['fc_new_2_weight'])
