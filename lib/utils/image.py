@@ -161,11 +161,15 @@ def resize(im, target_size, max_size, stride=0, interpolation = cv2.INTER_LINEAR
     if np.round(im_scale * im_size_max) > max_size:
         im_scale = float(max_size) / float(im_size_max)
     channel = im.shape[2]
+
+    n_im = np.zeros((int(floor(im.shape[0]*im_scale)),int(floor(im.shape[1]*im_scale)),channel))
+
     print im_scale
     for i in range(channel/3):
         print im.shape 
-        temp = cv2.resize(im[:,:,i*3:(i+1)*3].astype(np.float32), None, None, fx=im_scale, fy=im_scale, interpolation=interpolation)
+        n_im[:,:,i*3:(i+1)*3] = cv2.resize(im[:,:,i*3:(i+1)*3].astype(np.float32), None, None, fx=im_scale, fy=im_scale, interpolation=interpolation)
 
+    im = n_im
     if stride == 0:
         return im, im_scale
     else:
