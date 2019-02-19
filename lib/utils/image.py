@@ -53,6 +53,21 @@ def get_image(roidb, config):
         processed_roidb.append(new_rec)
     return processed_ims, processed_roidb
 
+def crop_image(img,n):
+    height, width, channel= img.shape[:]
+    grid_h = floor(height*1.0/(n-1))
+    grid_w = floor(width*1.0/(n-1))
+    step_h = floor(height*float(n-2)/float(pow((n-1),2)))
+    step_w = floor(width*float(n-2)/float(pow((n-1),2)))
+    croped_image = np.zeros((int(grid_h),int(grid_w),pow(n,2)*channel),dtype=int)
+    for i in range(n):
+        for j in range(n):
+            rect = [i*step_h,j*step_w,i*step_h+grid_h,j*step_w+grid_w]
+            #print rect
+            croped_img = img[int(rect[0]):int(rect[2]),int(rect[1]):int(rect[3]),:]
+            croped_image[:,:,(i*n+j)*channel:(i*n+j+1)*channel] = croped_img[:,:,:]
+    return croped_image
+
 
 def get_crop_image(roidb, config):
     """
@@ -77,7 +92,10 @@ def get_crop_image(roidb, config):
         scale_ind = random.randrange(len(config.SCALES))
         target_size = config.SCALES[scale_ind][0]
         max_size = config.SCALES[scale_ind][1]
-        im, im_scale = resize(im, target_size, max_size, stride=config.network.IMAGE_STRIDE)
+
+        croped_im = crop_image(im,config.CROP_NUM)
+
+        im, im_scale = resize(croped_im, target_size, max_size, stride=config.network.IMAGE_STRIDE)
         im_tensor = transform(im, config.network.PIXEL_MEANS)
         processed_ims.append(im_tensor)
         im_info = [im_tensor.shape[2], im_tensor.shape[3], im_scale]

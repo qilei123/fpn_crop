@@ -25,10 +25,11 @@ label =
 import numpy as np
 import numpy.random as npr
 
-from utils.image import get_image, tensor_vstack
+from utils.image import get_image, tensor_vstack, get_crop_image
 from generate_anchor import generate_anchors
 from bbox.bbox_transform import bbox_overlaps, bbox_transform
 
+DEBUG = True
 
 def get_rpn_testbatch(roidb, cfg):
     """
@@ -55,7 +56,10 @@ def get_rpn_batch(roidb, cfg):
     :return: data, label
     """
     assert len(roidb) == 1, 'Single batch only'
-    imgs, roidb = get_image(roidb, cfg)
+    if DEBUG:
+        imgs, roidb = get_crop_image(roidb, cfg)
+    else:
+        imgs, roidb = get_image(roidb, cfg)
     im_array = imgs[0]
     im_info = np.array([roidb[0]['im_info']], dtype=np.float32)
 

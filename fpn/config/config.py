@@ -24,6 +24,7 @@ config.gpus = ''
 config.CLASS_AGNOSTIC = True
 config.SCALES = [(600, 1000)]  # first is scale (the shorter side); second is max size
 config.TEST_SCALES = [(600, 1000)]
+config.CROP_NUM = 3
 # default training
 config.default = edict()
 config.default.frequent = 20
