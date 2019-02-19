@@ -47,6 +47,39 @@ def get_image(roidb, config):
     return processed_ims, processed_roidb
 
 
+def get_crop_image(roidb, config):
+    """
+    preprocess image and return processed roidb
+    :param roidb: a list of roidb
+    :return: list of img as in mxnet format
+    roidb add new item['im_info']
+    0 --- x (width, second dim of im)
+    |
+    y (height, first dim of im)
+    """
+    num_images = len(roidb)
+    processed_ims = []
+    processed_roidb = []
+    for i in range(num_images):
+        roi_rec = roidb[i]
+        assert os.path.exists(roi_rec['image']), '%s does not exist'.format(roi_rec['image'])
+        im = cv2.imread(roi_rec['image'], cv2.IMREAD_COLOR|cv2.IMREAD_IGNORE_ORIENTATION)
+        if roidb[i]['flipped']:
+            im = im[:, ::-1, :]
+        new_rec = roi_rec.copy()
+        scale_ind = random.randrange(len(config.SCALES))
+        target_size = config.SCALES[scale_ind][0]
+        max_size = config.SCALES[scale_ind][1]
+        im, im_scale = resize(im, target_size, max_size, stride=config.network.IMAGE_STRIDE)
+        im_tensor = transform(im, config.network.PIXEL_MEANS)
+        processed_ims.append(im_tensor)
+        im_info = [im_tensor.shape[2], im_tensor.shape[3], im_scale]
+        new_rec['boxes'] = clip_boxes(np.round(roi_rec['boxes'].copy() * im_scale), im_info[:2])
+        new_rec['im_info'] = im_info
+        processed_roidb.append(new_rec)
+    return processed_ims, processed_roidb
+
+
 def get_segmentation_image(segdb, config):
     """
     propocess image and return segdb
