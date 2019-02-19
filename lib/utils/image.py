@@ -162,7 +162,7 @@ def resize(im, target_size, max_size, stride=0, interpolation = cv2.INTER_LINEAR
         im_scale = float(max_size) / float(im_size_max)
     channel = im.shape[2]
     for i in range(channel): 
-        im[:,:,i] = cv2.resize(im[:,:,i], None, None, fx=im_scale, fy=im_scale, interpolation=interpolation)
+        im[:,:,i] = cv2.resize(im[:,:,i].astype(np.float32), None, None, fx=im_scale, fy=im_scale, interpolation=interpolation)
 
     if stride == 0:
         return im, im_scale
