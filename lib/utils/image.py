@@ -166,12 +166,16 @@ def resize(im, target_size, max_size, stride=0, interpolation = cv2.INTER_LINEAR
 
     n_im = np.zeros((t_im.shape[0],t_im.shape[1],channel),dtype = int)
 
-    print im_scale
+    if DEBUG:
+        print "im_scale:"+str(im_scale)
+        print "im.shape1:"+str(im.shape)
     for i in range(channel/3):
-        print im.shape 
+         
         n_im[:,:,i*3:(i+1)*3] = cv2.resize(im[:,:,i*3:(i+1)*3].astype(np.float32), None, None, fx=im_scale, fy=im_scale, interpolation=interpolation)
 
     im = n_im
+    if DEBUG:
+        print "im.shape2:"+str(im.shape)
     if stride == 0:
         return im, im_scale
     else:
