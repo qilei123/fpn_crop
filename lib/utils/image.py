@@ -12,6 +12,7 @@ import random
 from PIL import Image
 from bbox.bbox_transform import clip_boxes
 
+DEBUG = True
 
 # TODO: This two functions should be merged with individual data loader
 def get_image(roidb, config):
@@ -34,6 +35,8 @@ def get_image(roidb, config):
         if roidb[i]['flipped']:
             im = im[:, ::-1, :]
         new_rec = roi_rec.copy()
+        if DEBUG:
+            print 'new_rec:'+str(new_rec)
         scale_ind = random.randrange(len(config.SCALES))
         target_size = config.SCALES[scale_ind][0]
         max_size = config.SCALES[scale_ind][1]
