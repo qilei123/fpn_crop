@@ -116,6 +116,9 @@ def train_net(args, ctx, pretrained, epoch, prefix, begin_epoch, end_epoch, lr, 
         
         arg_params['conv1_weight'] = temp_conv1_weight
 
+        print 'temp_conv1_weight.shape:'+str(temp_conv1_weight.shape)
+        print "arg_params['conv1_weight'].shape"+str(arg_params['conv1_weight'].shape)
+
     else:
         arg_params, aux_params = load_param(pretrained, epoch, convert=True)
         sym_instance.init_weight(config, arg_params, aux_params)
