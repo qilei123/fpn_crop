@@ -43,6 +43,7 @@ sys.path.insert(0, mxnet_path)
 import shutil
 import numpy as np
 import mxnet as mx
+from mxnet import nd
 
 from symbols import *
 from core.loader import PyramidAnchorIterator
@@ -115,7 +116,7 @@ def train_net(args, ctx, pretrained, epoch, prefix, begin_epoch, end_epoch, lr, 
         single_shape = arg_params['conv1_weight'].shape
         print "arg_params['conv1_weight'].shape:"+str(arg_params['conv1_weight'].shape)
         print "arg_params['conv1_weight'].dtype:"+str(arg_params['conv1_weight'].dtype)
-        temp_conv1_weight = np.zeros((single_shape[0],single_shape[1]*config.CROP_NUM*config.CROP_NUM,single_shape[2],single_shape[3]),dtype = arg_params['conv1_weight'].dtype)
+        temp_conv1_weight = nd.empty((single_shape[0],single_shape[1]*config.CROP_NUM*config.CROP_NUM,single_shape[2],single_shape[3]),dtype = arg_params['conv1_weight'].dtype)
         print 'temp_conv1_weight.shape:'+str(temp_conv1_weight.shape)
         print 'temp_conv1_weight.dtype:'+str(temp_conv1_weight.dtype)
 
