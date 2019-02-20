@@ -269,7 +269,9 @@ class Module(BaseModule):
                     # just in case the cached array is just the target itself
 
                     if cache_arr is not arr:
-                        if cache_arr.shape[1]!=arr.shape[1]:
+                        if cache_arr.shape!=arr.shape:
+                            print cache_arr.shape
+                            print arr.shape
                             cache_channel = cache_arr.shape[1]
                             channel = arr.shape[1]
                             print cache_channel
