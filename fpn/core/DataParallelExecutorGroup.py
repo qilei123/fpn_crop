@@ -542,6 +542,8 @@ class DataParallelExecutorGroup(object):
                 else:
                     arg_arr = shared_exec.arg_dict[name]
                     print name
+                    print arg_arr.shape
+                    print arg_shapes[j]
                     assert arg_arr.shape == arg_shapes[j]
                     assert arg_arr.dtype == arg_types[j]
                     if self.grad_req[name] != 'null':

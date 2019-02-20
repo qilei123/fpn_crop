@@ -13,7 +13,7 @@ from PIL import Image
 from bbox.bbox_transform import clip_boxes
 from math import floor
 
-DEBUG = True
+DEBUG = False
 
 # TODO: This two functions should be merged with individual data loader
 def get_image(roidb, config):
