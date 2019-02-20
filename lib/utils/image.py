@@ -97,7 +97,7 @@ def get_crop_image(roidb, config):
         croped_im = crop_image(im,config.CROP_NUM)
 
         im, im_scale = resize(croped_im, target_size, max_size, stride=config.network.IMAGE_STRIDE)
-        im_tensor = transform(im[], config.network.PIXEL_MEANS)
+        im_tensor = transform(im, config.network.PIXEL_MEANS)
         processed_ims.append(im_tensor)
         im_info = [im_tensor.shape[2], im_tensor.shape[3], im_scale]
         new_rec['boxes'] = clip_boxes(np.round(roi_rec['boxes'].copy() * im_scale), im_info[:2])
