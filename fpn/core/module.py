@@ -273,6 +273,8 @@ class Module(BaseModule):
                             for i in range(channel/cache_channel):
                                 arr[:,i*cache_channel:(i+1)*cache_channel,:,:] = cache_arr
                         else:
+                            print "cache_arr.shape:"+str(cache_arr.shape)
+                            print "arr.shape:"+str(arr.shape)
                             cache_arr.copyto(arr)
                 else:
                     if not allow_missing:
