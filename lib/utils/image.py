@@ -97,7 +97,7 @@ def get_crop_image(roidb, config):
         croped_im = crop_image(im,config.CROP_NUM)
 
         im, im_scale = resize(croped_im, target_size, max_size, stride=config.network.IMAGE_STRIDE)
-        im_tensor = transform(im, config.network.PIXEL_MEANS)
+        im_tensor = transform(im[], config.network.PIXEL_MEANS)
         processed_ims.append(im_tensor)
         im_info = [im_tensor.shape[2], im_tensor.shape[3], im_scale]
         new_rec['boxes'] = clip_boxes(np.round(roi_rec['boxes'].copy() * im_scale), im_info[:2])
@@ -193,9 +193,11 @@ def transform(im, pixel_means):
     :param pixel_means: [B, G, R pixel means]
     :return: [batch, channel, height, width]
     """
-    im_tensor = np.zeros((1, 3, im.shape[0], im.shape[1]))
-    for i in range(3):
-        im_tensor[0, i, :, :] = im[:, :, 2 - i] - pixel_means[2 - i]
+    channel = im.shape[2]
+    im_tensor = np.zeros((1, channel, im.shape[0], im.shape[1]))
+    for i in range(channel/3):
+        for j in range(3):
+            im_tensor[0, i*3+j, :, :] = im[:, :,i*3+ 2 - j] - pixel_means[2 - j]
     return im_tensor
 
 def transform_seg_gt(gt):
