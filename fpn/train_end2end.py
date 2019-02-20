@@ -114,7 +114,7 @@ def train_net(args, ctx, pretrained, epoch, prefix, begin_epoch, end_epoch, lr, 
         #single_conv1_weight = arg_params['conv1_weight']
         single_shape = arg_params['conv1_weight'].shape
         print "arg_params['conv1_weight'].shape:"+str(arg_params['conv1_weight'].shape)
-        temp_conv1_weight = np.ndarray((single_shape[0],single_shape[1]*config.CROP_NUM*config.CROP_NUM,single_shape[2],single_shape[3]),dtype = arg_params['conv1_weight'].dtype)
+        temp_conv1_weight = np.array((single_shape[0],single_shape[1]*config.CROP_NUM*config.CROP_NUM,single_shape[2],single_shape[3]),dtype = arg_params['conv1_weight'].dtype)
         print 'temp_conv1_weight.shape:'+str(temp_conv1_weight.shape)
         for i in range(config.CROP_NUM*config.CROP_NUM):
             print i
