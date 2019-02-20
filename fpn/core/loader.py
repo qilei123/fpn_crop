@@ -200,7 +200,8 @@ class PyramidAnchorIterator(mx.io.DataIter):
 
     @property
     def provide_data(self):
-        print 'self.data.shape:'+str(self.data.shape)
+        print 'len(self.data):'+len(self.data)
+        print 'self.data.shape:'+str(self.data[0].shape)
         return [[(k, v.shape) for k, v in zip(self.data_name, self.data[i])] for i in xrange(len(self.data))]
 
     @property
