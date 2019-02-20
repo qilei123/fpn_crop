@@ -269,7 +269,8 @@ class Module(BaseModule):
                     # just in case the cached array is just the target itself
                     print(name)
                     if name =="conv1_weight":
-                        print arr
+                        print arr.shape
+                        print cache_arr.shape
                     if cache_arr is not arr:
                         cache_arr.copyto(arr)
                 else:
