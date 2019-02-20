@@ -279,6 +279,7 @@ class Module(BaseModule):
                             for i in range(channel/cache_channel):
                                 cache_arr.copyto(arr[:,i*cache_channel:(i+1)*cache_channel,:,:])
                             print cache_arr
+                            print arr
                         else:
                             cache_arr.copyto(arr)
                 else:
