@@ -837,8 +837,7 @@ class MutableModule(BaseModule):
                 max_data_shapes.append((name, max_shapes_dict[name]))
             else:
                 max_data_shapes.append((name, shape))
-            print name
-            print shape
+
         
         max_label_shapes = list()
         if not label_shapes.count(None) == len(label_shapes):
@@ -960,7 +959,7 @@ class MutableModule(BaseModule):
                         num_epoch=10)
         """
         assert num_epoch is not None, 'please specify number of epochs'
-
+        print 'train_data.provide_data:'+str(train_data.provide_data)
         self.bind(data_shapes=train_data.provide_data, label_shapes=train_data.provide_label,
                   for_training=True, force_rebind=force_rebind)
         if monitor is not None:
