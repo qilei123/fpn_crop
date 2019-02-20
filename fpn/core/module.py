@@ -265,21 +265,13 @@ class Module(BaseModule):
             if cache is not None:
                 if name in cache:
                     cache_arr = cache[name]
-
                     # just in case the cached array is just the target itself
-
                     if cache_arr is not arr:
                         if cache_arr.shape!=arr.shape:
-                            print cache_arr.shape
-                            print arr.shape
                             cache_channel = cache_arr.shape[1]
                             channel = arr.shape[1]
-                            print cache_channel
-                            print channel
                             for i in range(channel/cache_channel):
                                 arr[:,i*cache_channel:(i+1)*cache_channel,:,:] = cache_arr
-                            print cache_arr
-                            print arr
                         else:
                             cache_arr.copyto(arr)
                 else:
