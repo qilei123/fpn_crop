@@ -267,12 +267,17 @@ class Module(BaseModule):
                     cache_arr = cache[name]
 
                     # just in case the cached array is just the target itself
-                    print(name)
-                    if name =="conv1_weight":
-                        print arr.shape
-                        print cache_arr.shape
+
                     if cache_arr is not arr:
-                        cache_arr.copyto(arr)
+                        if cache_arr.shape[1]!=arr.shape[1]:
+                            cache_channel = cache_arr.shape[1]
+                            channel = arr.shape[1]
+                            print cache_channel
+                            print channel
+                            for i in range(channel/cache_channel):
+                                cache_arr.copyto(arr[:,i*cache_channel:(i+1)*cache_channel,:,:])
+                        else:
+                            cache_arr.copyto(arr)
                 else:
                     if not allow_missing:
                         raise RuntimeError("%s is not presented" % name)
