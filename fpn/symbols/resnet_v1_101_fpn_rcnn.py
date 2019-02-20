@@ -26,8 +26,8 @@ class resnet_v1_101_fpn_rcnn(Symbol):
             self.shared_param_dict[name + '_bias'] = mx.sym.Variable(name + '_bias')
 
     def get_resnet_backbone(self, data, with_dilated=False, with_dconv=False, with_dpyramid=False, eps=1e-5):
-        #conv1 = mx.symbol.Convolution(name='conv11', data=data, num_filter=64, pad=(3, 3), kernel=(7, 7), stride=(2, 2), no_bias=True)
         conv1 = mx.symbol.Convolution(name='conv11', data=data, num_filter=64, pad=(3, 3), kernel=(7, 7), stride=(2, 2), no_bias=True)
+        #conv1 = mx.symbol.Convolution(name='conv11', data=data, num_filter=64, pad=(3, 3), kernel=(7, 7), stride=(2, 2), no_bias=True)
         bn_conv1 = mx.symbol.BatchNorm(name='bn_conv1', data=conv1, use_global_stats=True, fix_gamma=False, eps=eps)
         scale_conv1 = bn_conv1
         conv1_relu = mx.symbol.Activation(name='conv1_relu', data=scale_conv1, act_type='relu')
@@ -933,7 +933,7 @@ class resnet_v1_101_fpn_rcnn(Symbol):
 
     def init_weight_rcnn(self, cfg, arg_params, aux_params):
 
-        arg_params['conv11_weight'] = mx.random.normal(0, 0.01, shape=self.arg_shape_dict['conv11_weight'])
+        #arg_params['conv11_weight'] = mx.random.normal(0, 0.01, shape=self.arg_shape_dict['conv11_weight'])
         #arg_params['conv11_bias'] = mx.nd.zeros(shape=self.arg_shape_dict['conv11_bias'])
 
         arg_params['fc_new_1_weight'] = mx.random.normal(0, 0.01, shape=self.arg_shape_dict['fc_new_1_weight'])
