@@ -196,7 +196,7 @@ def get_crop_image(roidb, config):
         'max_classes': overlaps.argmax(axis=1),
         'max_overlaps': overlaps.max(axis=1),        
         '''
-        new_rec['boxes'] = clip_boxes(np.round(temp_new_rec['boxes'].copy()* im_scale), im_info[:2])
+        new_rec['boxes'] = clip_boxes(np.round(roi_rec['boxes'].copy()* im_scale), im_info[:2])
         new_rec['im_info'] = im_info
         processed_roidb.append(new_rec)
     return processed_ims, processed_roidb
