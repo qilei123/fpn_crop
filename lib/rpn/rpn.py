@@ -299,13 +299,14 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
             assert len(scales.shape) == len(ratios.shape) == 2
             base_anchors = generate_anchors(base_size=feat_strides[feat_id], ratios=ratios[feat_id], scales=scales[feat_id])
         num_anchors = base_anchors.shape[0]
-        print "feat_shapes:"+str(feat_shapes)
+        
         feat_height, feat_width = feat_shapes[feat_id][0][-2:]
 
         # 1. generate proposals from bbox deltas and shifted anchors
         shift_x = np.arange(0, feat_width) * feat_strides[feat_id]
         shift_y = np.arange(0, feat_height) * feat_strides[feat_id]
         shift_x, shift_y = np.meshgrid(shift_x, shift_y)
+        
         shifts = np.vstack((shift_x.ravel(), shift_y.ravel(), shift_x.ravel(), shift_y.ravel())).transpose()
         # add A anchors (1, A, 4) to
         # cell K shifts (K, 1, 4) to get
@@ -325,7 +326,7 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
 
         # keep only inside anchors
         anchors = all_anchors[inds_inside, :]
-
+        print "anchors:"+str(anchors)
         # label: 1 is positive, 0 is negative, -1 is dont care
         # for sigmoid classifier, ignore the 'background' class
         labels = np.empty((len(inds_inside),), dtype=np.float32)
