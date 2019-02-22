@@ -41,6 +41,25 @@ def bbox_overlaps_py(boxes, query_boxes):
                     overlaps[n, k] = iw * ih / all_area
     return overlaps
 
+def bbox_centerIn_py(boxes, query_boxes):
+    """
+    determine overlaps between boxes and query_boxes
+    :param boxes: n * 4 bounding boxes
+    :param query_boxes: k * 4 bounding boxes
+    :return: overlaps: n * k overlaps
+    """
+    n_ = boxes.shape[0]
+    k_ = query_boxes.shape[0]
+    centerIns = np.zeros((n_, k_), dtype=np.float)
+    for k in range(k_):
+        query_box_area = (query_boxes[k, 2] - query_boxes[k, 0] + 1) * (query_boxes[k, 3] - query_boxes[k, 1] + 1)
+        for n in range(n_):
+            cw = (query_boxes[k,2]+query_boxes[k,0])/2
+            if cw<boxes[n,2] and cw>boxes[n,0]:
+                ch = (query_boxes[k,3]+query_boxes[k,1])/2
+                if ch<boxes[n,3] and ch>boxes[n,1]:
+                    centerIns[n, k] = 1
+    return centerIns
 
 def clip_boxes(boxes, im_shape):
     """

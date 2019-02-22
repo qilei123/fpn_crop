@@ -27,7 +27,7 @@ import numpy.random as npr
 
 from utils.image import get_image, tensor_vstack, get_crop_image
 from generate_anchor import generate_anchors
-from bbox.bbox_transform import bbox_overlaps, bbox_transform
+from bbox.bbox_transform import bbox_overlaps, bbox_transform, bbox_centerIn_py
 
 DEBUG = True
 
@@ -345,8 +345,11 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
         argmax_overlaps = overlaps.argmax(axis=1)
         max_overlaps = overlaps[np.arange(len(fpn_anchors)), argmax_overlaps]
         gt_argmax_overlaps = overlaps.argmax(axis=0)
+        print "gt_argmax_overlaps:"+str(gt_argmax_overlaps)
         gt_max_overlaps = overlaps[gt_argmax_overlaps, np.arange(overlaps.shape[1])]
         gt_argmax_overlaps = np.where(overlaps == gt_max_overlaps)[0]
+
+        centerIns = bbox_centerIn_py(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
 
         if not cfg.TRAIN.RPN_CLOBBER_POSITIVES:
             # assign bg labels first so that positive labels can clobber them
@@ -355,6 +358,9 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
         fpn_labels[gt_argmax_overlaps] = 1
         # fg label: above threshold IoU
         fpn_labels[max_overlaps >= cfg.TRAIN.RPN_POSITIVE_OVERLAP] = 1
+
+
+
         if cfg.TRAIN.RPN_CLOBBER_POSITIVES:
             # assign bg labels last so that negative labels can clobber positives
             fpn_labels[max_overlaps < cfg.TRAIN.RPN_NEGATIVE_OVERLAP] = 0
