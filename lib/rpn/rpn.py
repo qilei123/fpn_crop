@@ -297,6 +297,7 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
             base_anchors = generate_anchors(base_size=feat_strides[feat_id], ratios=ratios, scales=scales)
         else:
             assert len(scales.shape) == len(ratios.shape) == 2
+            print "scales[feat_id]:"+str(scales[feat_id])
             base_anchors = generate_anchors(base_size=feat_strides[feat_id], ratios=ratios[feat_id], scales=scales[feat_id])
         num_anchors = base_anchors.shape[0]
         feat_height, feat_width = feat_shapes[feat_id][0][-2:]
