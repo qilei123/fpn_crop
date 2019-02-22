@@ -871,7 +871,9 @@ class resnet_v1_101_fpn_rcnn(Symbol):
             # ROI proposal
             rois = mx.sym.Custom(**dict(arg_dict.items() + aux_dict.items()))
             # ROI proposal target
+            print "gt_boxes.shape:"+str(gt_boxes.shape)
             gt_boxes_reshape = mx.sym.Reshape(data=gt_boxes, shape=(-1, 5), name='gt_boxes_reshape')
+            print "gt_boxes_reshape:"+str(gt_boxes_reshape.shape)
             rois, label, bbox_target, bbox_weight \
                 = mx.sym.Custom(rois=rois, gt_boxes=gt_boxes_reshape, op_type='proposal_target', num_classes=num_reg_classes, batch_images=cfg.TRAIN.BATCH_IMAGES,
                                 batch_rois=cfg.TRAIN.BATCH_ROIS, cfg=cPickle.dumps(cfg), fg_fraction=cfg.TRAIN.FG_FRACTION)
