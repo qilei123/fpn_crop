@@ -63,7 +63,7 @@ def get_rpn_batch(roidb, cfg):
         imgs, roidb = get_crop_image(roidb, cfg)
     else:
         imgs, roidb = get_image(roidb, cfg)
-    print "roidb:"+str(roidb)
+    #print "roidb:"+str(roidb)
     #print 'imgs.shape:'+str(imgs[0].shape)
     im_array = imgs[0]
     im_info = np.array([roidb[0]['im_info']], dtype=np.float32)

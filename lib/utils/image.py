@@ -187,9 +187,9 @@ def get_crop_image(roidb, config):
         im_info = [im_tensor.shape[2], im_tensor.shape[3], im_scale]
         
         #temp_new_rec = roi_rec.copy()
-        print 'before:'+str(roi_rec)
+        #print 'before:'+str(roi_rec)
         remap_boxes(roi_rec,config.CROP_NUM,ori_shape)
-        print 'after:'+str(roi_rec)
+        #print 'after:'+str(roi_rec)
         new_rec = roi_rec.copy()
         #also need fix belows:
         '''
@@ -202,7 +202,7 @@ def get_crop_image(roidb, config):
         new_rec['boxes'] = clip_boxes(np.round(roi_rec['boxes'].copy()* im_scale), im_info[:2])
         new_rec['im_info'] = im_info
         processed_roidb.append(new_rec)
-    print "processed_roidb[0]:"+str(processed_roidb[0])
+    #print "processed_roidb[0]:"+str(processed_roidb[0])
     return processed_ims, processed_roidb
 
 
