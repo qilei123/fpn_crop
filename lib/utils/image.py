@@ -69,6 +69,38 @@ def crop_image(img,n):
             croped_image[:,:,(i*n+j)*channel:(i*n+j+1)*channel] = croped_img[:,:,:]
     return croped_image
 
+def compute_iou(rec1, rec2):
+	"""
+	computing IoU
+	:param rec1: (y0, x0, y1, x1), which reflects
+			(top, left, bottom, right)
+	:param rec2: (y0, x0, y1, x1)
+	:return: scala value of IoU
+	"""
+	# computing area of each rectangles
+	S_rec1 = (rec1[2] - rec1[0]) * (rec1[3] - rec1[1])
+	S_rec2 = (rec2[2] - rec2[0]) * (rec2[3] - rec2[1])
+
+	# computing the sum_area
+	sum_area = S_rec1 + S_rec2
+
+	# find the each edge of intersect rectangle
+	left_line = max(rec1[1], rec2[1])
+	right_line = min(rec1[3], rec2[3])
+	top_line = max(rec1[0], rec2[0])
+	bottom_line = min(rec1[2], rec2[2])
+	# judge if there is an intersect
+	if left_line >= right_line or top_line >= bottom_line:
+		return 0
+	else:
+
+		intersect = float(right_line - left_line) * float(bottom_line - top_line)
+		#return intersect / float(sum_area - intersect)
+		return intersect / float(S_rec1)
+
+def remap_boxes(boxes,n,im_size):
+
+    return 
 
 def get_crop_image(roidb, config):
     """
@@ -87,6 +119,7 @@ def get_crop_image(roidb, config):
         roi_rec = roidb[i]
         assert os.path.exists(roi_rec['image']), '%s does not exist'.format(roi_rec['image'])
         im = cv2.imread(roi_rec['image'], cv2.IMREAD_COLOR|cv2.IMREAD_IGNORE_ORIENTATION)
+        ori_shape = im.shape
         if roidb[i]['flipped']:
             im = im[:, ::-1, :]
         new_rec = roi_rec.copy()
@@ -100,7 +133,11 @@ def get_crop_image(roidb, config):
         im_tensor = transform(im, config.network.PIXEL_MEANS)
         processed_ims.append(im_tensor)
         im_info = [im_tensor.shape[2], im_tensor.shape[3], im_scale]
-        new_rec['boxes'] = clip_boxes(np.round(roi_rec['boxes'].copy() * im_scale), im_info[:2])
+        
+        ori_boxes = roi_rec['boxes'].copy()
+        #boxes = remap_boxes(ori_boxes.copy(),config.CROP_NUM,ori_shape[:2])
+        print ori_boxes
+        new_rec['boxes'] = clip_boxes(np.round( ori_boxes.copy()* im_scale), im_info[:2])
         new_rec['im_info'] = im_info
         processed_roidb.append(new_rec)
     return processed_ims, processed_roidb
@@ -181,6 +218,7 @@ def resize(im, target_size, max_size, stride=0, interpolation = cv2.INTER_LINEAR
         im_channel = im.shape[2]
         padded_im = np.zeros((im_height, im_width, im_channel))
         padded_im[:im.shape[0], :im.shape[1], :] = im
+        del im
         if DEBUG:
             print "padded_im.shape:"+str(padded_im.shape)
         return padded_im, im_scale
