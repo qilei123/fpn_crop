@@ -30,6 +30,7 @@ def par_assign_anchor_wrapper(cfg, iroidb, feat_sym, feat_strides, anchor_scales
     data['gt_boxes'] = rpn_label['gt_boxes'][np.newaxis, :, :]
 
     feat_shape = [y[1] for y in [x.infer_shape(**data_shape) for x in feat_sym]]
+    
     label = assign_pyramid_anchor(feat_shape, rpn_label['gt_boxes'], data['im_info'], cfg,
                                   feat_strides, anchor_scales, anchor_ratios, allowed_border)
     return {'data': data, 'label': label}

@@ -299,6 +299,7 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
             assert len(scales.shape) == len(ratios.shape) == 2
             base_anchors = generate_anchors(base_size=feat_strides[feat_id], ratios=ratios[feat_id], scales=scales[feat_id])
         num_anchors = base_anchors.shape[0]
+        print "feat_shapes:"+str(feat_shapes)
         feat_height, feat_width = feat_shapes[feat_id][0][-2:]
 
         # 1. generate proposals from bbox deltas and shifted anchors
