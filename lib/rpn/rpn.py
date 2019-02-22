@@ -326,7 +326,7 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
 
         # keep only inside anchors
         anchors = all_anchors[inds_inside, :]
-        print "anchors:"+str(anchors)
+        #print "anchors:"+str(anchors)
         # label: 1 is positive, 0 is negative, -1 is dont care
         # for sigmoid classifier, ignore the 'background' class
         labels = np.empty((len(inds_inside),), dtype=np.float32)
@@ -374,7 +374,9 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
     num_bg = fpn_labels.shape[0] if cfg.TRAIN.RPN_BATCH_SIZE == -1 else cfg.TRAIN.RPN_BATCH_SIZE - np.sum(fpn_labels >= 1)
     bg_inds = np.where(fpn_labels == 0)[0]
     fpn_anchors_fid = np.hstack((0, fpn_anchors_fid.cumsum()))
+    print "len(bg_inds):"+str(len(bg_inds))
     print "num_bg:"+str(num_bg)
+
     if balance_scale_bg:
         num_bg_scale = num_bg / len(feat_strides)
         for feat_id in range(0, len(feat_strides)):
