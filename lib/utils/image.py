@@ -98,9 +98,55 @@ def compute_iou(rec1, rec2):
 		#return intersect / float(sum_area - intersect)
 		return intersect / float(S_rec1)
 
-def remap_boxes(boxes,n,im_size):
+def filtBox(croped_rect,box):
+	t_box = box[:]
 
-    return 
+	if t_box[0]<croped_rect[0]:
+		t_box[0] = croped_rect[0]
+	if t_box[1]<croped_rect[1]:
+		t_box[1] = croped_rect[1]
+	if t_box[2]>croped_rect[2]:
+		t_box[2] = croped_rect[2]
+	if t_box[3]>croped_rect[3]:
+		t_box[3] = croped_rect[3]
+	
+	t_box[0] = t_box[0]-croped_rect[0]
+	t_box[2] = t_box[2]-croped_rect[0]
+	t_box[1] = t_box[1]-croped_rect[1]
+	t_box[3] = t_box[3]-croped_rect[1]
+
+	return t_box
+
+def remap_boxes(temp_new_rec,n,im_size):
+    #box [x1, y1, x2, y2]
+    boxes = []
+    gt_overlaps = []
+    max_classes = []
+    max_overlaps = []
+    height = im_size[0]
+    width = im_size[1]
+    grid_h = floor(height*1.0/(n-1))
+    grid_w = floor(width*1.0/(n-1))
+    step_h = floor(height*float(n-2)/float(pow((n-1),2)))
+    step_w = floor(width*float(n-2)/float(pow((n-1),2)))
+    for i in range(temp_new_rec['boxes'].shape[0]):
+        for j in range(n):
+            for k in range(n):
+                region = [step_w*k,step_h*j,step_w*k+grid_w,step_h*j+grid_h]
+                box = temp_new_rec['boxes'][i].tolist()
+                iou = compute_iou(box,region)
+                if iou>0.8:
+                    t_box = filtBox(region,box)
+                    boxes.append(t_box)
+                    gt_overlaps.append(temp_new_rec['gt_overlaps'][i].tolist())
+                    max_classes.append(temp_new_rec['max_classes'][i])
+                    max_overlaps.append(temp_new_rec['max_overlaps'][i])
+    
+    temp_new_rec['boxes'] = np.asarray(boxes,dtype=np.uint16)
+    temp_new_rec['gt_overlaps'] = np.asarray(gt_overlaps,dtype=np.float32)
+    temp_new_rec['max_classes'] = np.asarray(max_classes)
+    temp_new_rec['max_overlaps'] = np.asarray(max_overlaps)
+    return
 
 def get_crop_image(roidb, config):
     """
@@ -122,7 +168,7 @@ def get_crop_image(roidb, config):
         ori_shape = im.shape
         if roidb[i]['flipped']:
             im = im[:, ::-1, :]
-        new_rec = roi_rec.copy()
+        
         scale_ind = random.randrange(len(config.SCALES))
         target_size = config.SCALES[scale_ind][0]
         max_size = config.SCALES[scale_ind][1]
@@ -134,10 +180,20 @@ def get_crop_image(roidb, config):
         processed_ims.append(im_tensor)
         im_info = [im_tensor.shape[2], im_tensor.shape[3], im_scale]
         
-        ori_boxes = roi_rec['boxes'].copy()
-        #boxes = remap_boxes(ori_boxes.copy(),config.CROP_NUM,ori_shape[:2])
-        print ori_boxes
-        new_rec['boxes'] = clip_boxes(np.round( ori_boxes.copy()* im_scale), im_info[:2])
+        temp_new_rec = roi_rec.copy()
+        print 'before:'+str(temp_new_rec)
+        remap_boxes(temp_new_rec,config.CROP_NUM,ori_shape)
+        print 'after:'+str(temp_new_rec)
+        new_rec = temp_new_rec.copy()
+        #also need fix belows:
+        '''
+        'boxes': boxes,
+        'gt_classes': gt_classes,
+        'gt_overlaps': overlaps,
+        'max_classes': overlaps.argmax(axis=1),
+        'max_overlaps': overlaps.max(axis=1),        
+        '''
+        new_rec['boxes'] = clip_boxes(np.round(temp_new_rec['boxes'].copy()* im_scale), im_info[:2])
         new_rec['im_info'] = im_info
         processed_roidb.append(new_rec)
     return processed_ims, processed_roidb
