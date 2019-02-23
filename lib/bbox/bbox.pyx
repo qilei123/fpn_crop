@@ -58,7 +58,7 @@ def bbox_overlaps_cython(
                     overlaps[n, k] = iw * ih / ua
     return overlaps
 
-def bbox_overlaps_centerIns(
+def bbox_overlaps_centerIns_cython(
         np.ndarray[DTYPE_t, ndim=2] boxes,
         np.ndarray[DTYPE_t, ndim=2] query_boxes):
     """
