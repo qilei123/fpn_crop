@@ -12,12 +12,14 @@
 # --------------------------------------------------------
 
 import numpy as np
-from bbox import bbox_overlaps_cython
+from bbox import bbox_overlaps_cython,bbox_overlaps_centerIns_cython
 
 
 def bbox_overlaps(boxes, query_boxes):
     return bbox_overlaps_cython(boxes, query_boxes)
 
+def bbox_overlaps_centerIns():
+    return bbox_overlaps_centerIns_cython(boxes, query_boxes)
 
 def bbox_overlaps_py(boxes, query_boxes):
     """
