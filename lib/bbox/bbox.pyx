@@ -108,7 +108,7 @@ def bbox_overlaps_centerIns_cython(
                         box_center=[(boxes[n, 2] - boxes[n, 0])/2,(boxes[n, 3] - boxes[n, 1])/2]
                         if query_box_center[0]<boxes[n,2] and query_box_center[0]>boxes[n,0]:
                             if query_box_center[1]<boxes[n,3] and query_box_center[1]>boxes[n,1]:
-                                if box_center[0]<query_boxes[n,2] and box_center[0]>query_boxes[n,0]:
-                                    if box_center[1]<query_boxes[n,3] and box_center[1]>query_boxes[n,1]:
+                                if box_center[0]<query_boxes[k,2] and box_center[0]>query_boxes[k,0]:
+                                    if box_center[1]<query_boxes[k,3] and box_center[1]>query_boxes[k,1]:
                                         centerin_overlaps[n,k] = overlaps[n, k]                
     return overlaps,centerin_overlaps
