@@ -18,7 +18,7 @@ from bbox import bbox_overlaps_cython,bbox_overlaps_centerIns_cython
 def bbox_overlaps(boxes, query_boxes):
     return bbox_overlaps_cython(boxes, query_boxes)
 
-def bbox_overlaps_centerIns():
+def bbox_overlaps_centerIns(boxes, query_boxes):
     return bbox_overlaps_centerIns_cython(boxes, query_boxes)
 
 def bbox_overlaps_py(boxes, query_boxes):
