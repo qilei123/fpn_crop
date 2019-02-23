@@ -348,7 +348,6 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
         argmax_overlaps = overlaps.argmax(axis=1)
         max_overlaps = overlaps[np.arange(len(fpn_anchors)), argmax_overlaps]
         gt_argmax_overlaps = overlaps.argmax(axis=0)
-        print "gt_argmax_overlaps:"+str(gt_argmax_overlaps)
         gt_max_overlaps = overlaps[gt_argmax_overlaps, np.arange(overlaps.shape[1])]
         gt_argmax_overlaps = np.where(overlaps == gt_max_overlaps)[0]
         #centerIns = bbox_centerIn_py(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
@@ -359,11 +358,14 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
         fpn_labels[gt_argmax_overlaps] = 1
         # fg label: above threshold IoU
         fpn_labels[max_overlaps >= cfg.TRAIN.RPN_POSITIVE_OVERLAP] = 1
+
+        print "before:"+str(fpn_labels.sum())
+
         # when rpn_box contrain the gr_box center, we will use a smaller iou thredshold
         argmax_centerin_overlaps = centerin_overlaps.argmax(axis=1)
         max_centerin_overlaps = centerin_overlaps[np.arange(len(fpn_anchors)), argmax_centerin_overlaps]
         fpn_labels[max_centerin_overlaps >= cfg.TRAIN.RPN_MIN_POSITIVE_OVERLAP] = 1
-
+        print "after:"+str(fpn_labels.sum())
         if cfg.TRAIN.RPN_CLOBBER_POSITIVES:
             # assign bg labels last so that negative labels can clobber positives
             fpn_labels[max_overlaps < cfg.TRAIN.RPN_NEGATIVE_OVERLAP] = 0
@@ -383,8 +385,6 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
     num_bg = fpn_labels.shape[0] if cfg.TRAIN.RPN_BATCH_SIZE == -1 else cfg.TRAIN.RPN_BATCH_SIZE - np.sum(fpn_labels >= 1)
     bg_inds = np.where(fpn_labels == 0)[0]
     fpn_anchors_fid = np.hstack((0, fpn_anchors_fid.cumsum()))
-    print "len(bg_inds):"+str(len(bg_inds))
-    print "num_bg:"+str(num_bg)
 
     if balance_scale_bg:
         num_bg_scale = num_bg / len(feat_strides)
