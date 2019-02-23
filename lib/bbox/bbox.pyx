@@ -73,7 +73,7 @@ def bbox_overlaps_centerIns_cython(
     cdef unsigned int N = boxes.shape[0]
     cdef unsigned int K = query_boxes.shape[0]
     cdef np.ndarray[DTYPE_t, ndim=2] overlaps = np.zeros((N, K), dtype=DTYPE)
-    cdef np.ndarray[DTYPE_t, ndim=2] centerIns = np.zeros((N, K), dtype=DTYPE)
+    cdef np.ndarray[DTYPE_t, ndim=2] centerin_overlaps = np.zeros((N, K), dtype=DTYPE)
     cdef DTYPE_t iw, ih, box_area
     cdef DTYPE_t ua
     cdef unsigned int k, n
@@ -100,15 +100,15 @@ def bbox_overlaps_centerIns_cython(
                         box_area - iw * ih
                     )
                     overlaps[n, k] = iw * ih / ua
-            if strategy==1:
-                if query_box_center[0]<boxes[n,2] and query_box_center[0]>boxes[n,0]:
-                    if query_box_center[1]<boxes[n,3] and query_box_center[1]>boxes[n,1]:
-                        centerIns[n, k] = 1                
-            elif strategy==2:
-                box_center=[(boxes[n, 2] - boxes[n, 0])/2,(boxes[n, 3] - boxes[n, 1])/2]
-                if query_box_center[0]<boxes[n,2] and query_box_center[0]>boxes[n,0]:
-                    if query_box_center[1]<boxes[n,3] and query_box_center[1]>boxes[n,1]:
-                        if box_center[0]<query_boxes[n,2] and box_center[0]>query_boxes[n,0]:
-                            if box_center[1]<query_boxes[n,3] and box_center[1]>query_boxes[n,1]:
-                                centerIns[n,k]=1                
-    return overlaps,centerIns
+                    if strategy==1:
+                        if query_box_center[0]<boxes[n,2] and query_box_center[0]>boxes[n,0]:
+                            if query_box_center[1]<boxes[n,3] and query_box_center[1]>boxes[n,1]:
+                                centerin_overlaps[n, k] = overlaps[n, k]                
+                    elif strategy==2:
+                        box_center=[(boxes[n, 2] - boxes[n, 0])/2,(boxes[n, 3] - boxes[n, 1])/2]
+                        if query_box_center[0]<boxes[n,2] and query_box_center[0]>boxes[n,0]:
+                            if query_box_center[1]<boxes[n,3] and query_box_center[1]>boxes[n,1]:
+                                if box_center[0]<query_boxes[n,2] and box_center[0]>query_boxes[n,0]:
+                                    if box_center[1]<query_boxes[n,3] and box_center[1]>query_boxes[n,1]:
+                                        centerin_overlaps[n,k] = overlaps[n, k]                
+    return overlaps,centerin_overlaps
