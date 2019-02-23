@@ -14,7 +14,7 @@ cimport numpy as np
 DTYPE = np.float
 ctypedef np.float_t DTYPE_t
 
-strategy = 1  
+strategy = 2  
 
 def bbox_overlaps_cython(
         np.ndarray[DTYPE_t, ndim=2] boxes,
