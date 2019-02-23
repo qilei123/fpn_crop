@@ -359,13 +359,13 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
         # fg label: above threshold IoU
         fpn_labels[max_overlaps >= cfg.TRAIN.RPN_POSITIVE_OVERLAP] = 1
 
-        print "before:"+str(fpn_labels.sum())
+        print "before:"+str(fpn_labels[fpn_labels>=0].sum())
 
         # when rpn_box contrain the gr_box center, we will use a smaller iou thredshold
         argmax_centerin_overlaps = centerin_overlaps.argmax(axis=1)
         max_centerin_overlaps = centerin_overlaps[np.arange(len(fpn_anchors)), argmax_centerin_overlaps]
         fpn_labels[max_centerin_overlaps >= cfg.TRAIN.RPN_MIN_POSITIVE_OVERLAP] = 1
-        print "after:"+str(fpn_labels.sum())
+        print "after:"+str(fpn_labels[fpn_labels>=0].sum())
         if cfg.TRAIN.RPN_CLOBBER_POSITIVES:
             # assign bg labels last so that negative labels can clobber positives
             fpn_labels[max_overlaps < cfg.TRAIN.RPN_NEGATIVE_OVERLAP] = 0
