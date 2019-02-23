@@ -341,7 +341,7 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
     if gt_boxes.size > 0:
         # overlap between the anchors and the gt boxes
         # overlaps (ex, gt)
-        overlaps = bbox_overlaps(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
+        #overlaps = bbox_overlaps(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
 
         overlaps,centerIns = bbox_overlaps_centerIns(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
         
@@ -354,7 +354,7 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
 
         #centerIns = bbox_centerIn_py(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
 
-        
+
 
         if not cfg.TRAIN.RPN_CLOBBER_POSITIVES:
             # assign bg labels first so that positive labels can clobber them
