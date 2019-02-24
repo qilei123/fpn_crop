@@ -1,16 +1,16 @@
 ---
 MXNET_VERSION: "mxnet"
 output_path: "/home/qileimail123/data0/RetinaImg/DR_COCO7/fpn_crop_baseline1"
-symbol: resnet_v1_101_fpn_rcnn
+symbol: resnet_v1_101_fpn_rcnn_l1_focal
 gpus: '0,1,2,3'
 CLASS_AGNOSTIC: false
 SCALES:
 - 800
-- 1280
+- 960
 # TEST_SCALES: [[800, 1280]] # single scale testing
 TEST_SCALES: [[480, 800], [576, 900], [688, 1100], [800, 1200], [1200, 1600], [1400, 2000]] # multi-scale testing
 default:
-  frequent: 100
+  frequent: 20
   kvstore: device
 network:
   pretrained: "./model/pretrained_model/resnet_v1_101"
@@ -22,6 +22,7 @@ network:
   IMAGE_STRIDE: 32
   RCNN_FEAT_STRIDE: 16
   RPN_FEAT_STRIDE:
+  - 2
   - 4
   - 8
   - 16
