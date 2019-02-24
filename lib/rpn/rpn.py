@@ -366,10 +366,10 @@ def assign_pyramid_anchor(feat_shapes, gt_boxes, im_info, cfg, feat_strides=(4, 
         max_centerin_overlaps = centerin_overlaps[np.arange(len(fpn_anchors)), argmax_centerin_overlaps]
         fpn_labels[max_centerin_overlaps >= cfg.TRAIN.RPN_MIN_POSITIVE_OVERLAP] = 1
         f2 = fpn_labels[fpn_labels>=0].sum()
-        
+        '''
         if f1!=f2:
             print str(f1)+" vs "+str(f2)
-        
+        '''
         if cfg.TRAIN.RPN_CLOBBER_POSITIVES:
             # assign bg labels last so that negative labels can clobber positives
             fpn_labels[max_overlaps < cfg.TRAIN.RPN_NEGATIVE_OVERLAP] = 0
