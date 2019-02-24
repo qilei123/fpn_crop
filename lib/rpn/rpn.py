@@ -513,7 +513,7 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         all_anchors = base_anchors.reshape((1, A, 4)) + shifts.reshape((1, K, 4)).transpose((1, 0, 2))
         all_anchors = all_anchors.reshape((K * A, 4))
         total_anchors = int(K * A)
-        
+
         # only keep anchors inside the image
         inds_inside = np.where((all_anchors[:, 0] >= -allowed_border) &
                                (all_anchors[:, 1] >= -allowed_border) &
@@ -522,7 +522,7 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
 
         # keep only inside anchors
         anchors = all_anchors[inds_inside, :]
-        print "anchors:"+str(anchors)
+        #print "anchors:"+str(anchors)
         # label: 1 is positive, 0 is negative, -1 is dont care
         # for sigmoid classifier, ignore the 'background' class
         labels = np.empty((len(inds_inside),), dtype=np.float32)
@@ -537,13 +537,16 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
     if gt_boxes.size > 0:
         # overlap between the anchors and the gt boxes
         # overlaps (ex, gt)
-        overlaps = bbox_overlaps(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
+        #overlaps = bbox_overlaps(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
+
+        overlaps,centerin_overlaps = bbox_overlaps_centerIns(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
+        
         argmax_overlaps = overlaps.argmax(axis=1)
         max_overlaps = overlaps[np.arange(len(fpn_anchors)), argmax_overlaps]
         gt_argmax_overlaps = overlaps.argmax(axis=0)
         gt_max_overlaps = overlaps[gt_argmax_overlaps, np.arange(overlaps.shape[1])]
         gt_argmax_overlaps = np.where(overlaps == gt_max_overlaps)[0]
-
+        #centerIns = bbox_centerIn_py(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
         if not cfg.TRAIN.RPN_CLOBBER_POSITIVES:
             # assign bg labels first so that positive labels can clobber them
             fpn_labels[max_overlaps < cfg.TRAIN.RPN_NEGATIVE_OVERLAP] = 0
@@ -551,6 +554,18 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         fpn_labels[gt_argmax_overlaps] = 1
         # fg label: above threshold IoU
         fpn_labels[max_overlaps >= cfg.TRAIN.RPN_POSITIVE_OVERLAP] = 1
+
+        f1 = fpn_labels[fpn_labels>=0].sum()
+
+        # when rpn_box contrain the gr_box center, we will use a smaller iou thredshold
+        argmax_centerin_overlaps = centerin_overlaps.argmax(axis=1)
+        max_centerin_overlaps = centerin_overlaps[np.arange(len(fpn_anchors)), argmax_centerin_overlaps]
+        fpn_labels[max_centerin_overlaps >= cfg.TRAIN.RPN_MIN_POSITIVE_OVERLAP] = 1
+        f2 = fpn_labels[fpn_labels>=0].sum()
+        
+        if f1!=f2:
+            print str(f1)+" vs "+str(f2)
+        
         if cfg.TRAIN.RPN_CLOBBER_POSITIVES:
             # assign bg labels last so that negative labels can clobber positives
             fpn_labels[max_overlaps < cfg.TRAIN.RPN_NEGATIVE_OVERLAP] = 0
@@ -584,7 +599,7 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
             if DEBUG:
                 disable_inds = bg_inds[:(len(bg_inds) - num_bg)]
             fpn_labels[disable_inds] = -1
-
+            #print "len(disable_inds):"+str(len(disable_inds))
     fpn_bbox_targets = np.zeros((len(fpn_anchors), 4), dtype=np.float32)
     if gt_boxes.size > 0:
         fpn_bbox_targets[fpn_labels >= 1, :] = bbox_transform(fpn_anchors[fpn_labels >= 1, :], gt_boxes[argmax_overlaps[fpn_labels >= 1], :4])
