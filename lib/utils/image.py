@@ -185,8 +185,8 @@ def get_crop_image(roidb, config):
         im_tensor = transform(im, config.network.PIXEL_MEANS)
         processed_ims.append(im_tensor)
         im_info = [im_tensor.shape[2], im_tensor.shape[3], im_scale]
-        print "im_tensor.shape"+str(im_tensor.shape)
-        print "im_info"+str(im_info)
+        #print "im_tensor.shape"+str(im_tensor.shape)
+        #print "im_info"+str(im_info)
         #temp_new_rec = roi_rec.copy()
         #print 'before:'+str(roi_rec)
         remap_boxes(roi_rec,config.CROP_NUM,ori_shape)

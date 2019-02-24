@@ -79,6 +79,7 @@ def get_rpn_batch(roidb, cfg):
 
     data = {'data': im_array,
             'im_info': im_info}
+    print 'gt_boxes',gt_boxes.shape
     label = {'gt_boxes': gt_boxes}
     #print 'im_array.shape:'+str(im_array.shape)
     return data, label
