@@ -147,7 +147,7 @@ def remap_boxes(temp_new_rec,n,im_size):
                     max_overlaps.append(temp_new_rec['max_overlaps'][i])
                     
     temp_new_rec['boxes'] = np.asarray(boxes,dtype=np.uint16)
-    temp_new_rec['box_channels'] = np.asarray(box_channels)
+    temp_new_rec['box_channels'] = np.asarray(box_channels,dtype=np.uint16)
     temp_new_rec['gt_classes'] = np.asarray(gt_classes)
     temp_new_rec['gt_overlaps'] = np.asarray(gt_overlaps,dtype=np.float32)
     temp_new_rec['max_classes'] = np.asarray(max_classes)
