@@ -491,8 +491,8 @@ class DataParallelExecutorGroup(object):
         if label_shapes is not None:
             input_shapes.update(dict(label_shapes))
 
-        print "input_shapes:"
-        pprint.pprint(input_shapes)
+        #print "input_shapes:"
+        #pprint.pprint(input_shapes)
         
         arg_shapes, _, aux_shapes = self.symbol.infer_shape(**input_shapes)
         assert arg_shapes is not None, "shape inference failed"
