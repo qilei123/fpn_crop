@@ -18,7 +18,7 @@ from mxnet import context as ctx
 from mxnet import ndarray as nd
 from mxnet.io import DataDesc
 from mxnet.executor_manager import _split_input_slice
-
+import pprint
 
 
 def _load_general(data, targets, major_axis):
@@ -491,6 +491,8 @@ class DataParallelExecutorGroup(object):
         if label_shapes is not None:
             input_shapes.update(dict(label_shapes))
 
+        pprint.pprint(input_shapes)
+        
         arg_shapes, _, aux_shapes = self.symbol.infer_shape(**input_shapes)
         assert arg_shapes is not None, "shape inference failed"
 
