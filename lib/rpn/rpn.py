@@ -650,15 +650,12 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         bbox_weights = _unmap(fpn_bbox_weights[fpn_anchors_fid[feat_id]:fpn_anchors_fid[feat_id+1]], total_anchors, fpn_inds_inside[feat_id], fill=0)
 
         #project_to_6
-        print "labels0:"+str(labels.shape)
         labels = labels.reshape((1, feat_height, feat_width, channel_num,A)).transpose(0, 4, 1, 2, 3)
-        print "labels1:"+str(labels.shape)
-        labels = labels.reshape((1, channel_num * A * feat_height * feat_width)) 
-        print "labels2:"+str(labels.shape)
+        labels = labels.reshape((1, channel_num * A * feat_height * feat_width))
 
-        bbox_targets = bbox_targets.reshape((1, feat_height, feat_width, A * 4)).transpose(0, 3, 1, 2)
+        bbox_targets = bbox_targets.reshape((1, feat_height, feat_width, channel_num, A * 4)).transpose(0, 4, 1, 2, 3)
         bbox_targets = bbox_targets.reshape((1, A * 4, -1))
-        bbox_weights = bbox_weights.reshape((1, feat_height, feat_width, A * 4)).transpose((0, 3, 1, 2))
+        bbox_weights = bbox_weights.reshape((1, feat_height, feat_width, channel_num, A * 4)).transpose((0, 4, 1, 2, 3))
         bbox_weights = bbox_weights.reshape((1, A * 4, -1))
 
         label_list.append(labels)
