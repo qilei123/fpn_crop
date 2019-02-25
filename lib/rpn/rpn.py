@@ -530,6 +530,7 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         all_anchors_crop = np.zeros((total_anchors,5))
         for channel_i in range(channel_num):
             all_anchors_crop[int(i*K*A):int((i+1)*K*A),:] =all_anchors[:,:].tolist().append(channel_i) 
+        print "all_anchors.shape:"+str(all_anchors.shape)
         print "all_anchors_crop.shape:"+str(all_anchors_crop.shape)
         print "all_anchors_crop:"+str(all_anchors_crop)
 
