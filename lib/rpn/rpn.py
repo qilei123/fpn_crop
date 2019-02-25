@@ -71,6 +71,12 @@ def get_rpn_batch(roidb, cfg):
     # gt boxes: (x1, y1, x2, y2, cls)
     if roidb[0]['gt_classes'].size > 0:
         gt_inds = np.where(roidb[0]['gt_classes'] != 0)[0]
+        '''
+        gt_boxes = np.empty((roidb[0]['boxes'].shape[0], 5), dtype=np.float32)
+        gt_boxes[:, 0:4] = roidb[0]['boxes'][gt_inds, :]
+        gt_boxes[:, 4] = roidb[0]['gt_classes'][gt_inds]
+        '''    
+        #project_to_6
         gt_boxes = np.empty((roidb[0]['boxes'].shape[0], 6), dtype=np.float32)
         gt_boxes[:, 0:4] = roidb[0]['boxes'][gt_inds, :]
         gt_boxes[:, 4] = roidb[0]['box_channels'][gt_inds]
@@ -484,6 +490,8 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
     ratios = np.array(ratios, dtype=np.float32)
     assert(len(feat_shapes) == len(feat_strides))
 
+    channel_num =  cfg.CROP_NUM*cfg.CROP_NUM
+
     fpn_args = []
     fpn_anchors_fid = np.zeros(0).astype(int)
     fpn_anchors = np.zeros([0, 4])
@@ -496,6 +504,8 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         else:
             assert len(scales.shape) == len(ratios.shape) == 2
             base_anchors = generate_anchors(base_size=feat_strides[feat_id], ratios=ratios[feat_id], scales=scales[feat_id])
+        
+        
         num_anchors = base_anchors.shape[0]
         
         feat_height, feat_width = feat_shapes[feat_id][0][-2:]
@@ -514,7 +524,14 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         K = shifts.shape[0]
         all_anchors = base_anchors.reshape((1, A, 4)) + shifts.reshape((1, K, 4)).transpose((1, 0, 2))
         all_anchors = all_anchors.reshape((K * A, 4))
-        total_anchors = int(K * A)
+        total_anchors = int(K * A * channel_num)
+
+        #project_to_6
+        all_anchors_crop = np.zeros((total_anchors,5))
+        for channel_i in range(channel_num):
+            all_anchors_crop[int(i*K*A):int((i+1)*K*A),:] =all_anchors[:,:].append(channel_i) 
+        print "all_anchors_crop.shape:"+str(all_anchors_crop.shape)
+        print "all_anchors_crop:"+str(all_anchors_crop)
 
         # only keep anchors inside the image
         inds_inside = np.where((all_anchors[:, 0] >= -allowed_border) &
@@ -531,9 +548,6 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         labels.fill(-1)
 
         fpn_anchors_fid = np.hstack((fpn_anchors_fid, len(inds_inside)))
-
-        print "anchors.shape:"+str(anchors.shape)
-        print "anchors:"+str(anchors)
 
         fpn_anchors = np.vstack((fpn_anchors, anchors))
         fpn_labels = np.hstack((fpn_labels, labels))
