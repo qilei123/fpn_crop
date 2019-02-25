@@ -494,7 +494,9 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
 
     fpn_args = []
     fpn_anchors_fid = np.zeros(0).astype(int)
-    fpn_anchors = np.zeros([0, 4])
+    #project_to_6
+    #fpn_anchors = np.zeros([0, 4])
+    fpn_anchors = np.zeros([0, 5])
     fpn_labels = np.zeros(0)
     fpn_inds_inside = []
     for feat_id in range(len(feat_strides)):
