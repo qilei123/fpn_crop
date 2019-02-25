@@ -657,7 +657,7 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         bbox_targets = bbox_targets.reshape((1, A * 4, -1))
         bbox_weights = bbox_weights.reshape((1, feat_height, feat_width, channel_num, A * 4)).transpose((0, 4, 1, 2, 3))
         bbox_weights = bbox_weights.reshape((1, A * 4, -1))
-
+        
         label_list.append(labels)
         bbox_target_list.append(bbox_targets)
         bbox_weight_list.append(bbox_weights)
