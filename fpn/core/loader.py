@@ -270,8 +270,13 @@ class PyramidAnchorIterator(mx.io.DataIter):
         im_info = [[max_shapes['data'][2], max_shapes['data'][3], 1.0]]
 
         feat_shape = [y[1] for y in [x.infer_shape(**max_shapes) for x in self.feat_sym]]
+        #project_to_6
+        label = assign_pyramid_anchor(feat_shape, np.zeros((0, 6)), im_info, self.cfg,
+                                      self.feat_strides, self.anchor_scales, self.anchor_ratios, self.allowed_border)
+        '''
         label = assign_pyramid_anchor(feat_shape, np.zeros((0, 5)), im_info, self.cfg,
                                       self.feat_strides, self.anchor_scales, self.anchor_ratios, self.allowed_border)
+        '''
         label = [label[k] for k in self.label_name]
         label_shape = [(k, tuple([input_batch_size] + list(v.shape[1:]))) for k, v in zip(self.label_name, label)]
 
