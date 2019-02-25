@@ -651,9 +651,9 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
 
         #project_to_6
         print "labels0:"+str(labels.shape)
-        labels = labels.reshape((1, feat_height, feat_width, A)).transpose(0, 3, 1, 2)
+        labels = labels.reshape((1, feat_height, feat_width, A*channel_num)).transpose(0, 3, 1, 2)
         print "labels1:"+str(labels.shape)
-        labels = labels.reshape((1, A * feat_height * feat_width)) 
+        labels = labels.reshape((1, channel_num*A * feat_height * feat_width)) 
         print "labels2:"+str(labels.shape)
 
         bbox_targets = bbox_targets.reshape((1, feat_height, feat_width, A * 4)).transpose(0, 3, 1, 2)
