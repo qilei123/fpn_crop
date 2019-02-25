@@ -16,7 +16,7 @@ import mxnet as mx
 from mxnet.executor_manager import _split_input_slice
 
 from config.config import config
-from rpn.rpn import get_rpn_testbatch, get_rpn_batch, assign_pyramid_anchor
+from rpn.rpn import get_rpn_testbatch, get_rpn_batch, assign_pyramid_anchor,assign_pyramid_anchor_crop
 from rcnn import get_rcnn_testbatch
 
 
@@ -271,7 +271,7 @@ class PyramidAnchorIterator(mx.io.DataIter):
 
         feat_shape = [y[1] for y in [x.infer_shape(**max_shapes) for x in self.feat_sym]]
         #project_to_6
-        label = assign_pyramid_anchor(feat_shape, np.zeros((0, 6)), im_info, self.cfg,
+        label = assign_pyramid_anchor_crop(feat_shape, np.zeros((0, 6)), im_info, self.cfg,
                                       self.feat_strides, self.anchor_scales, self.anchor_ratios, self.allowed_border)
         '''
         label = assign_pyramid_anchor(feat_shape, np.zeros((0, 5)), im_info, self.cfg,

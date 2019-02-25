@@ -531,6 +531,10 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         labels.fill(-1)
 
         fpn_anchors_fid = np.hstack((fpn_anchors_fid, len(inds_inside)))
+
+        print "anchors.shape:"+str(anchors.shape)
+        print "anchors:"+str(anchors)
+
         fpn_anchors = np.vstack((fpn_anchors, anchors))
         fpn_labels = np.hstack((fpn_labels, labels))
         fpn_inds_inside.append(inds_inside)
