@@ -261,7 +261,6 @@ class DataParallelExecutorGroup(object):
         reshape : bool
         """
         assert reshape or not self.execs
-        print "----------data_shapes:"+str(data_shapes)
         for i in range(len(self.contexts)):
             data_shapes_i = data_shapes[i]
             if label_shapes is not None:
