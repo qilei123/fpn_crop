@@ -828,8 +828,8 @@ class resnet_v1_101_fpn_rcnn_l1_focal_test(Symbol):
         res1, res2, res3, res4, res5 = self.get_resnet_backbone(data)
         fpn_p1, fpn_p2, fpn_p3, fpn_p4, fpn_p5, fpn_p6 = self.get_fpn_feature(res1, res2, res3, res4, res5)
 
-        rpn_cls_score_p1, rpn_prob_p1, rpn_bbox_loss_p1, rpn_bbox_pred_p1 = self.get_rpn_subnet(fpn_p1, 
-                                                cfg.network.NUM_ANCHORS,'p1',cfg.CROP_NUM*cfg.CROP_NUM)
+        #rpn_cls_score_p1, rpn_prob_p1, rpn_bbox_loss_p1, rpn_bbox_pred_p1 = self.get_rpn_subnet(fpn_p1, 
+        #                                        cfg.network.NUM_ANCHORS,'p1',cfg.CROP_NUM*cfg.CROP_NUM)
 
         rpn_cls_score_p2, rpn_prob_p2, rpn_bbox_loss_p2, rpn_bbox_pred_p2 = self.get_rpn_subnet(fpn_p2, 
                                                 cfg.network.NUM_ANCHORS,'p2',cfg.CROP_NUM*cfg.CROP_NUM)
@@ -852,7 +852,7 @@ class resnet_v1_101_fpn_rcnn_l1_focal_test(Symbol):
             'rpn_cls_prob_stride16': rpn_prob_p4,
             'rpn_cls_prob_stride8': rpn_prob_p3,
             'rpn_cls_prob_stride4': rpn_prob_p2,
-            'rpn_cls_prob_stride2': rpn_prob_p1,
+            #'rpn_cls_prob_stride2': rpn_prob_p1,
         }
         rpn_bbox_pred_dict = {
             'rpn_bbox_pred_stride64': rpn_bbox_pred_p6,
@@ -860,7 +860,7 @@ class resnet_v1_101_fpn_rcnn_l1_focal_test(Symbol):
             'rpn_bbox_pred_stride16': rpn_bbox_pred_p4,
             'rpn_bbox_pred_stride8': rpn_bbox_pred_p3,
             'rpn_bbox_pred_stride4': rpn_bbox_pred_p2,
-            'rpn_bbox_pred_stride2': rpn_bbox_pred_p1,
+            #'rpn_bbox_pred_stride2': rpn_bbox_pred_p1,
         }
         arg_dict = dict(rpn_cls_prob_dict.items() + rpn_bbox_pred_dict.items())
 
@@ -870,10 +870,10 @@ class resnet_v1_101_fpn_rcnn_l1_focal_test(Symbol):
             rpn_bbox_weight = mx.sym.Variable(name='bbox_weight')
             gt_boxes = mx.sym.Variable(name="gt_boxes")
 
-            rpn_cls_score = mx.sym.Concat(rpn_cls_score_p1,rpn_cls_score_p2, 
+            rpn_cls_score = mx.sym.Concat(rpn_cls_score_p2, 
                 rpn_cls_score_p3, rpn_cls_score_p4, rpn_cls_score_p5, rpn_cls_score_p6, dim=2)
 
-            rpn_bbox_loss = mx.sym.Concat(rpn_bbox_loss_p1,rpn_bbox_loss_p2, 
+            rpn_bbox_loss = mx.sym.Concat(rpn_bbox_loss_p2, 
                 rpn_bbox_loss_p3, rpn_bbox_loss_p4, rpn_bbox_loss_p5, rpn_bbox_loss_p6, dim=2)
 
             # RPN classification loss
@@ -911,7 +911,7 @@ class resnet_v1_101_fpn_rcnn_l1_focal_test(Symbol):
 
         roi_pool = mx.symbol.Custom(data_p1=fpn_p1,data_p2=fpn_p2, data_p3=fpn_p3, data_p4=fpn_p4,data_p5=fpn_p5,
                                     rois=rois, op_type='fpn_roi_pooling', 
-                                    name='fpn_roi_pooling',feat_strides='(2,4,8,16,32)')
+                                    name='fpn_roi_pooling',feat_strides='(4,8,16,32)')
 
         # 2 fc
         fc_new_1 = mx.symbol.FullyConnected(name='fc_new_1', data=roi_pool, num_hidden=1024)
