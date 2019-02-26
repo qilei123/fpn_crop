@@ -140,7 +140,7 @@ class PyramidProposalOperator(mx.operator.CustomOp):
             scores = cls_prob_dict['stride' + str(s)].asnumpy()[:, self._num_anchors:, :, :]
             print "scores.shape:"+str(scores.shape)
             bbox_deltas = bbox_pred_dict['stride' + str(s)].asnumpy()
-            print "bbox_deltas.shape:"+str(bbox_deltas.shape)
+            
             im_info = in_data[-1].asnumpy()[0, :]
             # 1. Generate proposals from bbox_deltas and shifted anchors
             # use real image size instead of padded feature map sizes
@@ -171,6 +171,7 @@ class PyramidProposalOperator(mx.operator.CustomOp):
             # reshape to (1 * H * W * A, 4) where rows are ordered by (h, w, a)
             # in slowest to fastest order
             bbox_deltas = self._clip_pad(bbox_deltas, (height, width))
+            print "bbox_deltas.shape:"+str(bbox_deltas.shape)
             bbox_deltas = bbox_deltas.transpose((0, 2, 3, 1)).reshape((-1, 4))
 
             # Same story for the scores:
