@@ -595,8 +595,8 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         fpn_labels[max_centerin_overlaps >= cfg.TRAIN.RPN_MIN_POSITIVE_OVERLAP] = 1
         f2 = fpn_labels[fpn_labels>=0].sum()
         
-        if f1!=f2:
-            print str(f1)+" vs "+str(f2)
+        #if f1!=f2:
+        print str(f1)+" vs "+str(f2)
         
         if cfg.TRAIN.RPN_CLOBBER_POSITIVES:
             # assign bg labels last so that negative labels can clobber positives
