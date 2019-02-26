@@ -488,10 +488,14 @@ class DataParallelExecutorGroup(object):
         shared_data_arrays = self.shared_data_arrays[i]
 
         input_shapes = dict(data_shapes)
+
+        print "---1 input_shapes:---"
+        pprint.pprint(input_shapes)        
+
         if label_shapes is not None:
             input_shapes.update(dict(label_shapes))
 
-        print "---input_shapes:---"
+        print "---2 input_shapes:---"
         pprint.pprint(input_shapes)
         
         arg_shapes, _, aux_shapes = self.symbol.infer_shape(**input_shapes)

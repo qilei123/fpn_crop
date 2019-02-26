@@ -961,8 +961,8 @@ class MutableModule(BaseModule):
                         num_epoch=10)
         """
         assert num_epoch is not None, 'please specify number of epochs'
-        print 'train_data.provide_data:'+str(train_data.provide_data)
-        print 'train_data.provide_label:'+str(train_data.provide_label)
+        #print 'train_data.provide_data:'+str(train_data.provide_data)
+        #print 'train_data.provide_label:'+str(train_data.provide_label)
         self.bind(data_shapes=train_data.provide_data, label_shapes=train_data.provide_label,
                   for_training=True, force_rebind=force_rebind)
         if monitor is not None:
