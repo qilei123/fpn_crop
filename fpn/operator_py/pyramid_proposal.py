@@ -134,7 +134,6 @@ class PyramidProposalOperator(mx.operator.CustomOp):
         proposal_list = []
         score_list = []
         for s in self._feat_stride:
-            print "stride:"+str(s)
             stride = int(s)
             sub_anchors = generate_anchors(base_size=stride, scales=self._scales, ratios=self._ratios)
             scores = cls_prob_dict['stride' + str(s)].asnumpy()[:, self._num_anchors:, :, :]
@@ -160,8 +159,14 @@ class PyramidProposalOperator(mx.operator.CustomOp):
             # reshape to (K*A, 4) shifted anchors
             A = self._num_anchors
             K = shifts.shape[0]
-            anchors = sub_anchors.reshape((1, A, 4)) + shifts.reshape((1, K, 4)).transpose((1, 0, 2))
-            anchors = anchors.reshape((K * A, 4))
+            t_anchors = sub_anchors.reshape((1, A, 4)) + shifts.reshape((1, K, 4)).transpose((1, 0, 2))
+            t_anchors = t_anchors.reshape((K * A, 4))
+            channel_num = 9
+            total_anchors = int(K*A* channel_num)
+            anchors = np.zeros((total_anchors,5),dtype=t_anchors.dtype)
+            for channel_i in range(9):
+                anchors[int(channel_i*K*A):int((channel_i+1)*K*A),:4] =t_anchors[:,:]
+                anchors[int(channel_i*K*A):int((channel_i+1)*K*A),4] = np.ones(int(K*A))*channel_i            
 
             # Transpose and reshape predicted bbox transformations to get them
             # into the same order as the anchors:
