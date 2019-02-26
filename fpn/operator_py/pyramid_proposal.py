@@ -134,7 +134,7 @@ class PyramidProposalOperator(mx.operator.CustomOp):
         proposal_list = []
         score_list = []
         for s in self._feat_stride:
-            print "stride:"+s
+            print "stride:"+str(s)
             stride = int(s)
             sub_anchors = generate_anchors(base_size=stride, scales=self._scales, ratios=self._ratios)
             scores = cls_prob_dict['stride' + str(s)].asnumpy()[:, self._num_anchors:, :, :]
