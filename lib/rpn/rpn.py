@@ -565,12 +565,12 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         fpn_args.append([feat_height, feat_width, A, total_anchors])
 
     if gt_boxes.size > 0:
-        print "----------start train----------"
+        #print "----------start train----------"
         # overlap between the anchors and the gt boxes
         # overlaps (ex, gt)
         #overlaps = bbox_overlaps(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
-        print "---"+str(fpn_anchors.shape)
-        print "---"+str(gt_boxes)
+        #print "---"+str(fpn_anchors.shape)
+        #print "---"+str(gt_boxes)
         overlaps,centerin_overlaps = bbox_overlaps_centerIns(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
         
         argmax_overlaps = overlaps.argmax(axis=1)
@@ -595,8 +595,8 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         fpn_labels[max_centerin_overlaps >= cfg.TRAIN.RPN_MIN_POSITIVE_OVERLAP] = 1
         f2 = fpn_labels[fpn_labels>=0].sum()
         
-        #if f1!=f2:
-        print str(f1)+" vs "+str(f2)
+        if f1!=f2:
+            print str(f1)+" vs "+str(f2)
         
         if cfg.TRAIN.RPN_CLOBBER_POSITIVES:
             # assign bg labels last so that negative labels can clobber positives
