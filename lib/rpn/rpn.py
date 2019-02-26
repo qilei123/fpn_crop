@@ -565,6 +565,7 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         fpn_args.append([feat_height, feat_width, A, total_anchors])
 
     if gt_boxes.size > 0:
+        print "----------start train----------"
         # overlap between the anchors and the gt boxes
         # overlaps (ex, gt)
         #overlaps = bbox_overlaps(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
