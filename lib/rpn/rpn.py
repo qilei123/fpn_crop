@@ -570,7 +570,7 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
         # overlaps (ex, gt)
         #overlaps = bbox_overlaps(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
         print "---"+str(fpn_anchors.shape)
-        print "---"+str(gt_boxes.shape)
+        print "---"+str(gt_boxes)
         overlaps,centerin_overlaps = bbox_overlaps_centerIns(fpn_anchors.astype(np.float), gt_boxes.astype(np.float))
         
         argmax_overlaps = overlaps.argmax(axis=1)
