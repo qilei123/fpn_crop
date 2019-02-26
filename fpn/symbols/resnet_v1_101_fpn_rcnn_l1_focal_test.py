@@ -826,12 +826,23 @@ class resnet_v1_101_fpn_rcnn_l1_focal_test(Symbol):
         res1, res2, res3, res4, res5 = self.get_resnet_backbone(data)
         fpn_p1, fpn_p2, fpn_p3, fpn_p4, fpn_p5, fpn_p6 = self.get_fpn_feature(res1, res2, res3, res4, res5)
 
-        rpn_cls_score_p1, rpn_prob_p1, rpn_bbox_loss_p1, rpn_bbox_pred_p1 = self.get_rpn_subnet(fpn_p1, cfg.network.NUM_ANCHORS,cfg.CROP_NUM*cfg.CROP_NUM,'p1')
-        rpn_cls_score_p2, rpn_prob_p2, rpn_bbox_loss_p2, rpn_bbox_pred_p2 = self.get_rpn_subnet(fpn_p2, cfg.network.NUM_ANCHORS,cfg.CROP_NUM*cfg.CROP_NUM,'p2')
-        rpn_cls_score_p3, rpn_prob_p3, rpn_bbox_loss_p3, rpn_bbox_pred_p3 = self.get_rpn_subnet(fpn_p3, cfg.network.NUM_ANCHORS,cfg.CROP_NUM*cfg.CROP_NUM,'p3')
-        rpn_cls_score_p4, rpn_prob_p4, rpn_bbox_loss_p4, rpn_bbox_pred_p4 = self.get_rpn_subnet(fpn_p4, cfg.network.NUM_ANCHORS,cfg.CROP_NUM*cfg.CROP_NUM,'p4')
-        rpn_cls_score_p5, rpn_prob_p5, rpn_bbox_loss_p5, rpn_bbox_pred_p5 = self.get_rpn_subnet(fpn_p5, cfg.network.NUM_ANCHORS,cfg.CROP_NUM*cfg.CROP_NUM,'p5')
-        rpn_cls_score_p6, rpn_prob_p6, rpn_bbox_loss_p6, rpn_bbox_pred_p6 = self.get_rpn_subnet(fpn_p6, cfg.network.NUM_ANCHORS,cfg.CROP_NUM*cfg.CROP_NUM,'p6')
+        rpn_cls_score_p1, rpn_prob_p1, rpn_bbox_loss_p1, rpn_bbox_pred_p1 = self.get_rpn_subnet(fpn_p1, 
+                                                cfg.network.NUM_ANCHORS,'p1',cfg.CROP_NUM*cfg.CROP_NUM)
+
+        rpn_cls_score_p2, rpn_prob_p2, rpn_bbox_loss_p2, rpn_bbox_pred_p2 = self.get_rpn_subnet(fpn_p2, 
+                                                cfg.network.NUM_ANCHORS,'p2',cfg.CROP_NUM*cfg.CROP_NUM)
+
+        rpn_cls_score_p3, rpn_prob_p3, rpn_bbox_loss_p3, rpn_bbox_pred_p3 = self.get_rpn_subnet(fpn_p3, 
+                                                cfg.network.NUM_ANCHORS,'p3',cfg.CROP_NUM*cfg.CROP_NUM)
+
+        rpn_cls_score_p4, rpn_prob_p4, rpn_bbox_loss_p4, rpn_bbox_pred_p4 = self.get_rpn_subnet(fpn_p4, 
+                                                cfg.network.NUM_ANCHORS,'p4',cfg.CROP_NUM*cfg.CROP_NUM)
+
+        rpn_cls_score_p5, rpn_prob_p5, rpn_bbox_loss_p5, rpn_bbox_pred_p5 = self.get_rpn_subnet(fpn_p5, 
+                                                cfg.network.NUM_ANCHORS,'p5',cfg.CROP_NUM*cfg.CROP_NUM)
+
+        rpn_cls_score_p6, rpn_prob_p6, rpn_bbox_loss_p6, rpn_bbox_pred_p6 = self.get_rpn_subnet(fpn_p6, 
+                                                cfg.network.NUM_ANCHORS,'p6',cfg.CROP_NUM*cfg.CROP_NUM)
 
         rpn_cls_prob_dict = {
             'rpn_cls_prob_stride64': rpn_prob_p6,
