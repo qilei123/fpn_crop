@@ -800,9 +800,9 @@ class resnet_v1_101_fpn_rcnn_l1_focal_test(Symbol):
         rpn_conv = mx.sym.Convolution(data=data, kernel=(3, 3), pad=(1, 1), num_filter=512, name='rpn_conv_' + suffix,
                                       weight=self.shared_param_dict['rpn_conv_weight'], bias=self.shared_param_dict['rpn_conv_bias'])
         rpn_relu = mx.sym.Activation(data=rpn_conv, act_type='relu', name='rpn_relu_' + suffix)
-        rpn_cls_score = mx.sym.Convolution(data=rpn_relu, kernel=(1, 1), pad=(0, 0), num_filter=2 * num_anchors *channel_num, name='rpn_cls_score_' + suffix,
+        rpn_cls_score = mx.sym.Convolution(data=rpn_relu, kernel=(1, 1), pad=(0, 0), num_filter=2 * num_anchors , name='rpn_cls_score_' + suffix,
                                            weight=self.shared_param_dict['rpn_cls_score_weight'], bias=self.shared_param_dict['rpn_cls_score_bias'])
-        rpn_bbox_pred = mx.sym.Convolution(data=rpn_relu, kernel=(1, 1), pad=(0, 0), num_filter=4 * num_anchors *channel_num, name='rpn_bbox_pred_' + suffix,
+        rpn_bbox_pred = mx.sym.Convolution(data=rpn_relu, kernel=(1, 1), pad=(0, 0), num_filter=4 * num_anchors , name='rpn_bbox_pred_' + suffix,
                                            weight=self.shared_param_dict['rpn_bbox_pred_weight'], bias=self.shared_param_dict['rpn_bbox_pred_bias'])
 
         # n x (2*A) x H x W => n x 2 x (A*H*W)
@@ -868,8 +868,12 @@ class resnet_v1_101_fpn_rcnn_l1_focal_test(Symbol):
             rpn_bbox_weight = mx.sym.Variable(name='bbox_weight')
             gt_boxes = mx.sym.Variable(name="gt_boxes")
 
-            rpn_cls_score = mx.sym.Concat(rpn_cls_score_p1,rpn_cls_score_p2, rpn_cls_score_p3, rpn_cls_score_p4, rpn_cls_score_p5, rpn_cls_score_p6, dim=2)
-            rpn_bbox_loss = mx.sym.Concat(rpn_bbox_loss_p1,rpn_bbox_loss_p2, rpn_bbox_loss_p3, rpn_bbox_loss_p4, rpn_bbox_loss_p5, rpn_bbox_loss_p6, dim=2)
+            rpn_cls_score = mx.sym.Concat(rpn_cls_score_p1,rpn_cls_score_p2, 
+                rpn_cls_score_p3, rpn_cls_score_p4, rpn_cls_score_p5, rpn_cls_score_p6, dim=2)
+
+            rpn_bbox_loss = mx.sym.Concat(rpn_bbox_loss_p1,rpn_bbox_loss_p2, 
+                rpn_bbox_loss_p3, rpn_bbox_loss_p4, rpn_bbox_loss_p5, rpn_bbox_loss_p6, dim=2)
+
             # RPN classification loss
             rpn_cls_output = mx.sym.SoftmaxOutput(data=rpn_cls_score, label=rpn_label, multi_output=True, normalization='valid',
                                                   use_ignore=True, ignore_label=-1, name='rpn_cls_prob')
