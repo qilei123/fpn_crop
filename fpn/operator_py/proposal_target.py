@@ -56,8 +56,8 @@ class ProposalTargetOperator(mx.operator.CustomOp):
 
         # Include ground-truth boxes in the set of candidate rois
         zeros = np.zeros((gt_boxes.shape[0], 1), dtype=gt_boxes.dtype)
-
-        print 'gt_boxes.shape'+str(gt_boxes.shape)
+        print 'zeros.shape:'+str(zeros.shape)
+        print 'gt_boxes.shape:'+str(gt_boxes.shape)
 
         all_rois = np.vstack((all_rois, np.hstack((zeros, gt_boxes[:, :-1]))))
         # Sanity check: single batch only
