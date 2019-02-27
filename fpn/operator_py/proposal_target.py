@@ -47,7 +47,7 @@ class ProposalTargetOperator(mx.operator.CustomOp):
         all_rois = in_data[0].asnumpy()
         gt_boxes = in_data[1].asnumpy()
         print '-----------------------------'
-        print all_rois[:100,4]
+        print all_rois[:100,5]
         print '-----------------------------'
         print gt_boxes[:,4]
 
