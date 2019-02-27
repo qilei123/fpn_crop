@@ -71,7 +71,7 @@ class ProposalTargetOperator(mx.operator.CustomOp):
 
         rois, labels, bbox_targets, bbox_weights = \
             sample_rois(all_rois, fg_rois_per_image, rois_per_image, self._num_classes, self._cfg, gt_boxes=gt_boxes)
-
+        print "rois.shape:"+str(rois.shape)
         if DEBUG:
             print "labels=", labels
             print 'num fg: {}'.format((labels > 0).sum())
