@@ -211,8 +211,8 @@ def sample_rois_crop(rois, fg_rois_per_image, rois_per_image, num_classes, cfg,
 
     # foreground RoI with FG_THRESH overlap
     fg_indexes = np.where(overlaps >= cfg.TRAIN.FG_THRESH)[0]
-    print "-------------fg_indexes.size"+str(fg_indexes.size)
-    print str(fg_indexes)
+    #print "-------------fg_indexes.size"+str(fg_indexes.size)
+    #print str(fg_indexes)
     # guard against the case when an image has fewer than fg_rois_per_image foreground RoIs
     fg_rois_per_this_image = np.minimum(fg_rois_per_image, fg_indexes.size)
     # Sample foreground regions without replacement

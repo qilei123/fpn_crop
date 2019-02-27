@@ -46,12 +46,12 @@ class ProposalTargetOperator(mx.operator.CustomOp):
             'batchimages {} must devide batch_rois {}'.format(self._batch_images, self._batch_rois)
         all_rois = in_data[0].asnumpy()
         gt_boxes = in_data[1].asnumpy()
-        print '-----------------------------'
-        print all_rois[:100,5]
-        print all_rois.shape
-        print '-----------------------------'
-        print gt_boxes[:,4]
-        print gt_boxes.shape
+        #print '-----------------------------'
+        #print all_rois[:100,5]
+        #print all_rois.shape
+        #print '-----------------------------'
+        #print gt_boxes[:,4]
+        #print gt_boxes.shape
 
         if self._batch_rois == -1:
             rois_per_image = all_rois.shape[0] + gt_boxes.shape[0]
@@ -71,10 +71,10 @@ class ProposalTargetOperator(mx.operator.CustomOp):
 
         rois, labels, bbox_targets, bbox_weights = \
             sample_rois_crop(all_rois, fg_rois_per_image, rois_per_image, self._num_classes, self._cfg, gt_boxes=gt_boxes)
-        print "-------rois.shape:"+str(rois.shape)
-        print str(rois)
-        print "-------labels.shape:"+str(labels.shape)
-        print str(labels)
+        #print "-------rois.shape:"+str(rois.shape)
+        #print str(rois)
+        #print "-------labels.shape:"+str(labels.shape)
+        #print str(labels)
         if DEBUG:
             print "labels=", labels
             print 'num fg: {}'.format((labels > 0).sum())
