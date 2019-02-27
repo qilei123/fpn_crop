@@ -306,7 +306,7 @@ class PyramidProposalProp(mx.operator.CustomOpProp):
                 return ['output']
 
     def infer_shape(self, in_shape):
-        output_shape = (self._rpn_post_nms_top_n, 5)
+        output_shape = (self._rpn_post_nms_top_n, 6)
         score_shape = (self._rpn_post_nms_top_n, 1)
 
         if self.output_pyramid_rois:
