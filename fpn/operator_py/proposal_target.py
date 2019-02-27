@@ -22,7 +22,7 @@ from easydict import EasyDict as edict
 import cPickle
 
 
-from core.rcnn import sample_rois
+from core.rcnn import sample_rois,sample_rois_crop
 
 DEBUG = False
 
@@ -70,7 +70,7 @@ class ProposalTargetOperator(mx.operator.CustomOp):
         assert np.all(all_rois[:, 0] == 0), 'Only single item batches are supported'
 
         rois, labels, bbox_targets, bbox_weights = \
-            sample_rois(all_rois, fg_rois_per_image, rois_per_image, self._num_classes, self._cfg, gt_boxes=gt_boxes)
+            sample_rois_crop(all_rois, fg_rois_per_image, rois_per_image, self._num_classes, self._cfg, gt_boxes=gt_boxes)
         print "rois.shape:"+str(rois.shape)
         if DEBUG:
             print "labels=", labels
