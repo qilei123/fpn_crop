@@ -35,7 +35,7 @@ class FPNROIPoolingOperator(mx.operator.CustomOp):
             self.feat_idx[i] = np.where(feat_id == i)[0]
             if len(self.feat_idx[i]) == 0:
                 # padding dummy roi
-                rois_p[i] = np.zeros((1, 5))
+                rois_p[i] = np.zeros((1, 6))
                 pyramid_idx.append(-1)
             else:
                 rois_p[i] = rois[self.feat_idx[i]]
