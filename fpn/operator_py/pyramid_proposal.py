@@ -217,11 +217,11 @@ class PyramidProposalOperator(mx.operator.CustomOp):
             order = order[:pre_nms_topN]
         proposals = proposals[order, :]
         scores = scores[order]
-
+        channels = channels[order]
         # 6. apply nms (e.g. threshold = 0.7)
         # 7. take after_nms_topN (e.g. 300)
         # 8. return the top proposals (-> RoIs top)
-        det = np.hstack((proposals,channels, scores)).astype(np.float32)
+        det = np.hstack((proposals, scores)).astype(np.float32)
         keep = nms(det)
         if post_nms_topN > 0:
             keep = keep[:post_nms_topN]
@@ -231,12 +231,13 @@ class PyramidProposalOperator(mx.operator.CustomOp):
             keep = np.hstack((keep, pad))
         proposals = proposals[keep, :]
         scores = scores[keep]
+        channels = channels[keep]
 
         # Output rois array
         # Our RPN implementation only supports a single input image, so all
         # batch inds are 0
         batch_inds = np.zeros((proposals.shape[0], 1), dtype=np.float32)
-        blob = np.hstack((batch_inds, proposals.astype(np.float32, copy=False)))
+        blob = np.hstack((batch_inds, proposals.astype(np.float32, copy=False),channels))
         # if is_train:
         self.assign(out_data[0], req[0], blob)
         if self._output_score:
