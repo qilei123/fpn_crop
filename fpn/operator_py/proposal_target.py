@@ -46,6 +46,10 @@ class ProposalTargetOperator(mx.operator.CustomOp):
             'batchimages {} must devide batch_rois {}'.format(self._batch_images, self._batch_rois)
         all_rois = in_data[0].asnumpy()
         gt_boxes = in_data[1].asnumpy()
+        print '-----------------------------'
+        print all_rois[:100,4]
+        print '-----------------------------'
+        print gt_boxes[:,4]
 
         if self._batch_rois == -1:
             rois_per_image = all_rois.shape[0] + gt_boxes.shape[0]
