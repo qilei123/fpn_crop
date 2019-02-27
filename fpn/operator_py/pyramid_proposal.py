@@ -166,10 +166,10 @@ class PyramidProposalOperator(mx.operator.CustomOp):
             
             total_anchors = int(K*A* self._channel_num)
             anchors = np.zeros((total_anchors,4),dtype=t_anchors.dtype)
-            channels = np.zeros((total_anchors,1),dtype=t_anchors.dtype)
+            channels = np.zeros(total_anchors,dtype=t_anchors.dtype)
             for channel_i in range(9):
                 anchors[int(channel_i*K*A):int((channel_i+1)*K*A),:4] =t_anchors[:,:]
-                channels[int(channel_i*K*A):int((channel_i+1)*K*A),:1] = np.ones(int(K*A))*channel_i            
+                channels[int(channel_i*K*A):int((channel_i+1)*K*A)] = np.ones(int(K*A))*channel_i            
 
             # Transpose and reshape predicted bbox transformations to get them
             # into the same order as the anchors:
