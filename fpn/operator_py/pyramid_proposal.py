@@ -30,7 +30,7 @@ class PyramidProposalOperator(mx.operator.CustomOp):
         self._rpn_post_nms_top_n = rpn_post_nms_top_n
         self._threshold = threshold
         self._rpn_min_size = rpn_min_size
-
+        self._channel_num = 9
     def forward(self, is_train, req, in_data, out_data, aux):
         nms = gpu_nms_wrapper(self._threshold, in_data[0].context.device_id)
 
@@ -137,7 +137,7 @@ class PyramidProposalOperator(mx.operator.CustomOp):
             stride = int(s)
             sub_anchors = generate_anchors(base_size=stride, scales=self._scales, ratios=self._ratios)
             print "cls_prob_dict['stride' + str(s)].shape:"+str(cls_prob_dict['stride' + str(s)].shape)
-            scores = cls_prob_dict['stride' + str(s)].asnumpy()[:, self._num_anchors:, :, :]
+            scores = cls_prob_dict['stride' + str(s)].asnumpy()[:, self._num_anchors*self._channel_num:, :, :]
             print "scores.shape:"+str(scores.shape)
             bbox_deltas = bbox_pred_dict['stride' + str(s)].asnumpy()
             
@@ -162,8 +162,8 @@ class PyramidProposalOperator(mx.operator.CustomOp):
             K = shifts.shape[0]
             t_anchors = sub_anchors.reshape((1, A, 4)) + shifts.reshape((1, K, 4)).transpose((1, 0, 2))
             t_anchors = t_anchors.reshape((K * A, 4))
-            channel_num = 9
-            total_anchors = int(K*A* channel_num)
+            
+            total_anchors = int(K*A* self._channel_num)
             anchors = np.zeros((total_anchors,5),dtype=t_anchors.dtype)
             for channel_i in range(9):
                 anchors[int(channel_i*K*A):int((channel_i+1)*K*A),:4] =t_anchors[:,:]

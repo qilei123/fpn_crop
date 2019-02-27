@@ -811,7 +811,7 @@ class resnet_v1_101_fpn_rcnn_l1_focal_test(Symbol):
         rpn_cls_score_t1 = mx.sym.Reshape(data=rpn_cls_score, shape=(0, 2, -1, 0), name='rpn_cls_score_t1_' + suffix)
         rpn_cls_score_t2 = mx.sym.Reshape(data=rpn_cls_score_t1, shape=(0, 2, -1), name='rpn_cls_score_t2_' + suffix)
         rpn_cls_prob = mx.sym.SoftmaxActivation(data=rpn_cls_score_t1, mode='channel', name='rpn_cls_prob_' + suffix)
-        rpn_cls_prob_t = mx.sym.Reshape(data=rpn_cls_prob, shape=(0, 2 * num_anchors , -1, 0,channel_num), name='rpn_cls_prob_t_' + suffix)
+        rpn_cls_prob_t = mx.sym.Reshape(data=rpn_cls_prob, shape=(0, 2 * num_anchors*channel_num, -1, 0), name='rpn_cls_prob_t_' + suffix)
         rpn_bbox_pred_t = mx.sym.Reshape(data=rpn_bbox_pred, shape=(0, 4 * num_anchors , -1), name='rpn_bbox_pred_t_' + suffix)
         return rpn_cls_score_t2, rpn_cls_prob_t, rpn_bbox_pred_t, rpn_bbox_pred
 
