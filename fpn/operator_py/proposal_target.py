@@ -48,8 +48,10 @@ class ProposalTargetOperator(mx.operator.CustomOp):
         gt_boxes = in_data[1].asnumpy()
         print '-----------------------------'
         print all_rois[:100,5]
+        print all_rois.shape
         print '-----------------------------'
         print gt_boxes[:,4]
+        print gt_boxes.shape
 
         if self._batch_rois == -1:
             rois_per_image = all_rois.shape[0] + gt_boxes.shape[0]
@@ -60,9 +62,9 @@ class ProposalTargetOperator(mx.operator.CustomOp):
 
         # Include ground-truth boxes in the set of candidate rois
         zeros = np.zeros((gt_boxes.shape[0], 1), dtype=gt_boxes.dtype)
-        print 'zeros.shape:'+str(zeros.shape)
-        print 'gt_boxes.shape:'+str(gt_boxes.shape)
-        print 'all_rois.shape:'+str(all_rois.shape)
+        #print 'zeros.shape:'+str(zeros.shape)
+        #print 'gt_boxes.shape:'+str(gt_boxes.shape)
+        #print 'all_rois.shape:'+str(all_rois.shape)
         all_rois = np.vstack((all_rois, np.hstack((zeros, gt_boxes[:, :-1]))))
         # Sanity check: single batch only
         assert np.all(all_rois[:, 0] == 0), 'Only single item batches are supported'
