@@ -133,6 +133,7 @@ class PyramidProposalOperator(mx.operator.CustomOp):
 
         proposal_list = []
         score_list = []
+        channel_list = []
         for s in self._feat_stride:
             stride = int(s)
             sub_anchors = generate_anchors(base_size=stride, scales=self._scales, ratios=self._ratios)
@@ -140,7 +141,7 @@ class PyramidProposalOperator(mx.operator.CustomOp):
             scores = cls_prob_dict['stride' + str(s)].asnumpy()[:, self._num_anchors*self._channel_num:, :, :]
             print "scores.shape:"+str(scores.shape)
             bbox_deltas = bbox_pred_dict['stride' + str(s)].asnumpy()
-            
+            #print "bbox_deltas.shape:"+str(bbox_deltas.shape)
             im_info = in_data[-1].asnumpy()[0, :]
             # 1. Generate proposals from bbox_deltas and shifted anchors
             # use real image size instead of padded feature map sizes
@@ -164,10 +165,11 @@ class PyramidProposalOperator(mx.operator.CustomOp):
             t_anchors = t_anchors.reshape((K * A, 4))
             
             total_anchors = int(K*A* self._channel_num)
-            anchors = np.zeros((total_anchors,5),dtype=t_anchors.dtype)
+            anchors = np.zeros((total_anchors,4),dtype=t_anchors.dtype)
+            channels = np.zeros((total_anchors,1),dtype=t_anchors.dtype)
             for channel_i in range(9):
                 anchors[int(channel_i*K*A):int((channel_i+1)*K*A),:4] =t_anchors[:,:]
-                anchors[int(channel_i*K*A):int((channel_i+1)*K*A),4] = np.ones(int(K*A))*channel_i            
+                channels[int(channel_i*K*A):int((channel_i+1)*K*A),:1] = np.ones(int(K*A))*channel_i            
 
             # Transpose and reshape predicted bbox transformations to get them
             # into the same order as the anchors:
@@ -199,13 +201,15 @@ class PyramidProposalOperator(mx.operator.CustomOp):
             keep = self._filter_boxes(proposals, min_size * im_info[2])
             proposals = proposals[keep, :]
             scores = scores[keep]
+            channels = channels[keep]
 
+            channel_list.append(channels)
             proposal_list.append(proposals)
             score_list.append(scores)
 
         proposals = np.vstack(proposal_list)
         scores = np.vstack(score_list)
-
+        channels = np.vstack(channel_list)
         # 4. sort all (proposal, score) pairs by score from highest to lowest
         # 5. take top pre_nms_topN (e.g. 6000)
         order = scores.ravel().argsort()[::-1]
@@ -217,7 +221,7 @@ class PyramidProposalOperator(mx.operator.CustomOp):
         # 6. apply nms (e.g. threshold = 0.7)
         # 7. take after_nms_topN (e.g. 300)
         # 8. return the top proposals (-> RoIs top)
-        det = np.hstack((proposals, scores)).astype(np.float32)
+        det = np.hstack((proposals,channels, scores)).astype(np.float32)
         keep = nms(det)
         if post_nms_topN > 0:
             keep = keep[:post_nms_topN]
