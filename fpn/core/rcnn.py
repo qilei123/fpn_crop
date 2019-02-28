@@ -255,5 +255,9 @@ def sample_rois_crop(rois, fg_rois_per_image, rois_per_image, num_classes, cfg,
 
     bbox_targets, bbox_weights = \
         expand_bbox_regression_targets(bbox_target_data, num_classes, cfg)
-
+    print "---------rois, labels, bbox_targets, bbox_weights----------"
+    print rois.shape
+    print labels.shape
+    print bbox_targets.shape
+    print bbox_weights.shape
     return rois, labels, bbox_targets, bbox_weights
