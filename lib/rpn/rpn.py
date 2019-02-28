@@ -634,7 +634,7 @@ def assign_pyramid_anchor_crop(feat_shapes, gt_boxes, im_info, cfg, feat_strides
             #print "len(disable_inds):"+str(len(disable_inds))
     fpn_bbox_targets = np.zeros((len(fpn_anchors), 4), dtype=np.float32)
     if gt_boxes.size > 0:
-        fpn_bbox_targets[fpn_labels >= 1, :] = bbox_transform(fpn_anchors[fpn_labels >= 1, :], gt_boxes[argmax_overlaps[fpn_labels >= 1], :4])
+        fpn_bbox_targets[fpn_labels >= 1, :] = bbox_transform(fpn_anchors[fpn_labels >= 1, :], gt_boxes[argmax_overlaps[fpn_labels >= 1], :5])
         # fpn_bbox_targets[:] = bbox_transform(fpn_anchors, gt_boxes[argmax_overlaps, :4])
     # fpn_bbox_targets = (fpn_bbox_targets - np.array(cfg.TRAIN.BBOX_MEANS)) / np.array(cfg.TRAIN.BBOX_STDS)
     fpn_bbox_weights = np.zeros((len(fpn_anchors), 4), dtype=np.float32)
