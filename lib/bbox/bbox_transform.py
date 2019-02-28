@@ -115,11 +115,37 @@ def nonlinear_transform(ex_rois, gt_rois):
     targets_dy = (gt_ctr_y - ex_ctr_y) / (ex_heights + 1e-14)
     targets_dw = np.log(gt_widths / ex_widths)
     targets_dh = np.log(gt_heights / ex_heights)
-
     targets = np.vstack(
         (targets_dx, targets_dy, targets_dw, targets_dh)).transpose()
     return targets
 
+def nonlinear_transform_crop(ex_rois, gt_rois):
+    """
+    compute bounding box regression targets from ex_rois to gt_rois
+    :param ex_rois: [N, 4]
+    :param gt_rois: [N, 4]
+    :return: [N, 4]
+    """
+    assert ex_rois.shape[0] == gt_rois.shape[0], 'inconsistent rois number'
+
+    ex_widths = ex_rois[:, 2] - ex_rois[:, 0] + 1.0
+    ex_heights = ex_rois[:, 3] - ex_rois[:, 1] + 1.0
+    ex_ctr_x = ex_rois[:, 0] + 0.5 * (ex_widths - 1.0)
+    ex_ctr_y = ex_rois[:, 1] + 0.5 * (ex_heights - 1.0)
+
+    gt_widths = gt_rois[:, 2] - gt_rois[:, 0] + 1.0
+    gt_heights = gt_rois[:, 3] - gt_rois[:, 1] + 1.0
+    gt_ctr_x = gt_rois[:, 0] + 0.5 * (gt_widths - 1.0)
+    gt_ctr_y = gt_rois[:, 1] + 0.5 * (gt_heights - 1.0)
+
+    targets_dx = (gt_ctr_x - ex_ctr_x) / (ex_widths + 1e-14)
+    targets_dy = (gt_ctr_y - ex_ctr_y) / (ex_heights + 1e-14)
+    targets_dw = np.log(gt_widths / ex_widths)
+    targets_dh = np.log(gt_heights / ex_heights)
+    targets_ch = ex_rois[:,4]
+    targets = np.vstack(
+        (targets_dx, targets_dy, targets_dw, targets_dh,targets_ch)).transpose()
+    return targets
 
 def nonlinear_pred(boxes, box_deltas):
     """
@@ -203,5 +229,5 @@ def iou_pred(boxes, box_deltas):
 
 
 # define bbox_transform and bbox_pred
-bbox_transform = nonlinear_transform
+bbox_transform = nonlinear_transform_crop
 bbox_pred = nonlinear_pred
