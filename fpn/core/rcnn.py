@@ -247,7 +247,7 @@ def sample_rois_crop(rois, fg_rois_per_image, rois_per_image, num_classes, cfg,
     if bbox_targets is not None:
         bbox_target_data = bbox_targets[keep_indexes, :]
     else:
-        targets = bbox_transform(rois[:, 1:], gt_boxes[gt_assignment[keep_indexes], :4])
+        targets = bbox_transform(rois[:, 1:], gt_boxes[gt_assignment[keep_indexes], :5])
         if cfg.TRAIN.BBOX_NORMALIZATION_PRECOMPUTED:
             targets = ((targets - np.array(cfg.TRAIN.BBOX_MEANS))
                        / np.array(cfg.TRAIN.BBOX_STDS))
@@ -256,6 +256,7 @@ def sample_rois_crop(rois, fg_rois_per_image, rois_per_image, num_classes, cfg,
     bbox_targets, bbox_weights = \
         expand_bbox_regression_targets(bbox_target_data, num_classes, cfg)
     print "---------rois, labels, bbox_targets, bbox_weights----------"
+    print gt_boxes[gt_assignment[keep_indexes].shape
     print rois.shape
     print rois[:10,:]
     print labels.shape
