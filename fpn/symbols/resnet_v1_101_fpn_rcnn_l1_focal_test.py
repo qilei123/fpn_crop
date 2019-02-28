@@ -922,7 +922,7 @@ class resnet_v1_101_fpn_rcnn_l1_focal_test(Symbol):
 
         # cls_score/bbox_pred
         cls_score = mx.symbol.FullyConnected(name='cls_score', data=fc_new_2_relu, num_hidden=num_classes)
-        bbox_pred = mx.symbol.FullyConnected(name='bbox_pred', data=fc_new_2_relu, num_hidden=num_reg_classes * 4)
+        bbox_pred = mx.symbol.FullyConnected(name='bbox_pred', data=fc_new_2_relu, num_hidden=num_reg_classes * 5)
 
         if is_train:
             if cfg.TRAIN.ENABLE_OHEM:
