@@ -144,7 +144,7 @@ def nonlinear_transform_crop(ex_rois, gt_rois):
     targets_dh = np.log(gt_heights / ex_heights)
     targets_ch = ex_rois[:,4]
     targets = np.vstack(
-        (targets_dx, targets_dy, targets_dw, targets_dh,targets_ch)).transpose()
+        (targets_dx, targets_dy, targets_dw, targets_dh,targets_ch,targets_ch)).transpose()
     return targets
 
 def nonlinear_pred(boxes, box_deltas):
